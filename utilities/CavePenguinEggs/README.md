@@ -1,11 +1,11 @@
-CavePenguinEggs Fellow V1
+Cave Penguin Eggs V1
 Completes Cave Penguin Eggs quest
 Quest has a 1 in 5 chance of giving 10% health boost item (Essence of Cave Penguin)
 Runtime varies from 4 to 30 minutes usually
 
 Setup:
 - Copy files (.met and .utl) into Virindi Tank directory, usually C:\Games\VirindiPlugins\VirindiTank
-- Type the following in chat: /vt meta load CavePenguinEggsV1
+- Load the meta in VTank via GUI or type the following in chat: /vt meta load CavePenguinEggsV1
 
 Requirements:
 - Virindi Tank
