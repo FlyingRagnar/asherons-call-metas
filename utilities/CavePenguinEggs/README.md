@@ -13,13 +13,13 @@ Requirements:
 - Characters must be in Town Network at start or have tie (primary or secondary) to any Town Network portal
 
 Info:
-- Recomended character level is around 100
+- Recommended character level is around 100
 - Can be run at the same time by multiple characters/accounts, a fun side game to see who gets done first
 - This quest includes a custom loot profile to loot the eggs, at the end of the quest a loot profile of "DefaultLoot.utl" is loaded
 - Be aware of needing to change this back to your preferred profile afterwards (or rename/copy your profile to be named DefaultLoot.utl)
 
 How this meta can get stuck/broken:
-- Can sometimes get stuck on a doorway in the Penguin Cave Hatchery or in Silyuun for turn in
+- Can sometimes get stuck on a doorway in the Penguin Cave Hatchery or in Silyun for turn in
 
 Other:
 - Tested on LeafDawn
