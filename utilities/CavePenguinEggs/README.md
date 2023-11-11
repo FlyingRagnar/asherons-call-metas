@@ -3,14 +3,16 @@ Completes Cave Penguin Eggs quest
 Quest has a 1 in 5 chance of giving 10% health boost item (Essence of Cave Penguin)  
 Runtime varies from 4 to 30 minutes usually  
 
-Setup:
+Steps to run:
 - Copy files (.met and .utl) into Virindi Tank directory, usually C:\Games\VirindiPlugins\VirindiTank
-- Load the meta in VTank via GUI or type the following in chat: /vt meta load CavePenguinEggsV1
+- Load the meta in VTank via GUI drop down or type the following in chat: /vt meta load CavePenguinEggsV1
 
 Requirements:
 - Virindi Tank
 - Utility Belt (0.2.7)
 - Characters must be in Town Network at start or have tie (primary or secondary) to any Town Network portal
+
+Video: https://youtu.be/S2zTsFqxH2o
 
 Info:
 - Recommended character level is around 100

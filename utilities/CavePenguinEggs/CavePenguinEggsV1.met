@@ -358,7 +358,7 @@ n
 s
 e
 s
-echo[When complete, loads whatever is saved in loot profile DefaultLoot\.utl,15]
+echo[`When complete, loads whatever is saved in loot profile DefaultLoot.utl`,15]
 s
 Begin
 i
