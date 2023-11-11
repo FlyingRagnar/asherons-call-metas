@@ -1,7 +1,7 @@
-Deewain Fellow V1
-Completes Deewain's Dark Cavern quest as a multi-client fellowship
-This quest is the king of luminance efficiency quests, 30K lum in less than 15 minutes.
-Runtime is around 13-15 minutes with a fellow of 4
+Deewain Fellow V1  
+Completes Deewain's Dark Cavern quest as a multi-client fellowship  
+This quest is the king of luminance efficiency quests, 30K lum in less than 15 minutes    
+Runtime is around 13-15 minutes with a fellow of 4  
 
 Steps to run:
 - Copy file (.met) into Virindi Tank directory, usually C:\Games\VirindiPlugins\VirindiTank
