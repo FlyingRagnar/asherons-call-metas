@@ -6,7 +6,7 @@ Runtime is around 13-15 minutes with a fellow of 4
 Steps to run:
 - Copy file (.met) into Virindi Tank directory, usually C:\Games\VirindiPlugins\VirindiTank
 - Create fellowship with all characters going on quest
-- Load the meta in VTank via GUI drop down or type the following in chat: /ub bc /vt meta load DeewainFellowV1
+- Type the following in chat: /ub bc /vt meta load DeewainFellowV1
 
 Requirements:
 - Virindi Tank
