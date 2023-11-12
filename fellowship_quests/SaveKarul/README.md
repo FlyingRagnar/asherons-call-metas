@@ -25,6 +25,9 @@ Info:
 - Can be completed with just one character in a fellow with an egg
 - If any character dies during the dangerous run into the house to use the portal, they will portal recall and try again
 - During testing it was rare that a character would fail to make it into portal in more than two attempts
+- This quest includes a custom loot profile to loot a key, at the end of the quest a loot profile of "DefaultLoot.utl" is loaded
+Be aware of needing to change this back to your preferred profile afterwards (or rename/copy your profile to be named DefaultLoot.utl)
+
 
 How this meta can get stuck/broken:
 - Disconnect of any fellowship member before getting to the dungeon
