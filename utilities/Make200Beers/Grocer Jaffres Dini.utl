@@ -1,0 +1,57 @@
+UTL
+1
+7
+B: Kegs
+
+0;10;1
+24
+22
+Empty Stopped Keg
+1
+B: Bottles
+
+0;10;1
+24
+18
+Empty Bottles
+1
+B: Plain Barley
+
+0;10;1
+16
+17
+Plain Barley
+1
+B: Amber Barley
+
+0;10;1
+8
+17
+Amber Barley
+1
+B: Baking Pan
+
+0;10;1
+1
+15
+Baking Pan
+1
+B: Trade Note (250,000)
+
+0;1;7;12
+4
+15
+12
+250000
+19
+S: Trade Note
+
+0;3;7
+4
+15
+SalvageCombine
+11
+1
+
+0
+0

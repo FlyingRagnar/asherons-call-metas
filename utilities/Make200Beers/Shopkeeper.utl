@@ -1,0 +1,43 @@
+UTL
+1
+5
+B: Water
+
+0;10;1
+24
+10
+Water
+1
+B: Hops
+
+0;10;1
+24
+21
+Ultra Green Hops
+1
+B: Yeast
+
+0;10;1
+24
+16
+Dried Yeast
+1
+B: Trade Note (250,000)
+
+0;1;7;12
+4
+15
+12
+250000
+19
+S: Trade Note
+
+0;3;7
+4
+15
+SalvageCombine
+11
+1
+
+0
+0
