@@ -1,7 +1,8 @@
 Gauntlet Lum Gems V1  
 Goes to Asheron's Castle and buys luminance gems commonly used for Gauntlet  
-Ensures characters has at least 5 of each gem (Rare Armor, Rare Damage, Crystal of Vitality)  
-At most, this will cost 125,000 luminance    
+Ensures character has at least 5 of each gem (Rare Armor, Rare Damage, Crystal of Vitality)  
+At most, this will cost 125,000 luminance      
+Note: A character needs only 1 of each per Gauntlet run.  5 are purchased for convenience.  
 
 Steps to run:
 - Copy the .met file into Virindi Tank directory, usually C:\Games\VirindiPlugins\VirindiTank
