@@ -1,2 +1,2 @@
-*.af -text diff
-*.met -text diff
+*.af binary
+*.met binary
