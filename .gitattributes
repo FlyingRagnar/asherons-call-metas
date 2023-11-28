@@ -1,2 +1,2 @@
-*.af text eol=crlf
-*.met text eol=crlf
+*.af -text diff
+*.met -text diff
