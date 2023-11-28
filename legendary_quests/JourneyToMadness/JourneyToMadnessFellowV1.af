@@ -37,6 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
+~~ test comment
 STATE: {Default} ~~ {
 	IF: Expr {getfellowshipstatus[]==0}
 		DO: DoAll
