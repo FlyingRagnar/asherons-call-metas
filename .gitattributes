@@ -1,1 +1,2 @@
-* text eol=crlf
+*.af text eol=crlf
+*.met text eol=crlf
