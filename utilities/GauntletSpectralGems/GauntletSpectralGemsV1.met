@@ -779,7 +779,7 @@ n
 s
 e
 s
-echo[`Have ` +$gyCoinsNeeded+ ` needed Ancient Mhoire Coins to buy spectral gems`,15]
+echo[`I have the ` +$gyCoinsNeeded+ ` needed Ancient Mhoire Coins to buy spectral gems`,15]
 i
 1
 s
@@ -887,7 +887,7 @@ n
 s
 e
 s
-echo[`Have ` +$promNotesNeeded+ ` needed Promissory Notes to exchange for Ancient Mhoire Coins`,15]
+echo[`I have the ` +$promNotesNeeded+ ` needed Promissory Notes to exchange for Ancient Mhoire Coins`,15]
 i
 5
 TABLE
@@ -1008,7 +1008,7 @@ n
 s
 e
 s
-echo[`Have ` +$coloCoinsNeeded+ ` needed Colosseum Coins to exchange for Ancient Mhoire Coins`,15]
+echo[`I have the ` +$coloCoinsNeeded+ ` needed Colosseum Coins to exchange for Ancient Mhoire Coins`,15]
 i
 5
 TABLE
@@ -1062,7 +1062,7 @@ n
 s
 e
 s
-echo[`Need ` +$gyCoinsNeeded+ ` Ancient Mhoire Coins or ` +$promNotesNeeded+ ` Promissory Notes or ` +$coloCoinsNeeded+ ` Colosseum Coins in order to purchase/exchange for spectral gems`,15]
+echo[`I need ` +$gyCoinsNeeded+ ` Ancient Mhoire Coins or ` +$promNotesNeeded+ ` Promissory Notes or ` +$coloCoinsNeeded+ ` Colosseum Coins in order to purchase/exchange for spectral gems`,15]
 i
 1
 s

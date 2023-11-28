@@ -37,6 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
+~~ test
 STATE: {Default} ~~ {
 	IF: ItemCountGE 1 {Exquisite Casino Key}
 		DO:	SetState {Settings}
@@ -66,7 +67,7 @@ STATE: {Settings} ~~ {
 STATE: {Begin} ~~ {
 	IF: Always
 		DO: DoAll
-				DoExpr {echo[Pull Exquisite Casino Keys Meta v2\.0 by Sun Invictus,15]}
+				DoExpr {echo[Pull Exquisite Casino Keys Meta by Sun Invictus,15]}
 	IF: SecsInStateGE 5
 		DO: CallState {CheckForTownNetworkDrop} {NavigatingToShoushiCasino}
 ~~ }

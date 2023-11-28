@@ -37,6 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
+~~ test
 STATE: {Default} ~~ {
 	IF: Always
 		DO:	SetState {Settings}		

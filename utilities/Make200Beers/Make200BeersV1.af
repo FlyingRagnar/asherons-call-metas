@@ -37,6 +37,7 @@
 ~~		prt (deprecated in VTank)														
 ~~ }																					
 
+~~ test
 STATE: {Default} ~~ {
 	IF: Not Expr {getcharskill_traininglevel[39] >= 2} ~~ Cooking trained/specialized
 		DO: DoAll

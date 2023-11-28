@@ -36,6 +36,7 @@
 ~~		cht					jmp															
 ~~		prt (deprecated in VTank)														
 ~~ }																
+~~ test
 STATE: {Default} ~~ {
 	IF: Expr {getqueststatus[cavepenguinegg] == 0}
 		DO: DoAll
