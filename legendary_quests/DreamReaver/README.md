@@ -1,4 +1,4 @@
-Dream Reaver Fellow V1   
+Dream Reaver Fellow V3
 Completes Dream Reaver Investigation quest as a multi-client fellowship     
 
 Steps to run:
