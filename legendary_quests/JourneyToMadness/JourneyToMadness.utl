@@ -3,13 +3,6 @@ UTL
 4
 Journey To Madness
 
-0;10;1
-1
-18
-Legendary Key
-1
-Journey To Madness
-
 0;1;1
 16
 Crimson Key
@@ -25,6 +18,16 @@ Journey To Madness
 0;1;1
 24
 Private Chamber Key
+1
+Legendary Key
+
+0;10;1;1
+1
+18
+Legendary Key
+1
+24
+^((?!Shattered).)*$
 1
 SalvageCombine
 277

@@ -10,10 +10,13 @@ Bone Fragment
 1
 Legendary Key
 
-0;10;1
+0;10;1;1
 1
 18
 Legendary Key
+1
+24
+^((?!Shattered).)*$
 1
 SalvageCombine
 277
