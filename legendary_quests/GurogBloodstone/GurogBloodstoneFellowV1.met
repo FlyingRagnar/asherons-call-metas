@@ -3980,7 +3980,7 @@ n
 s
 e
 s
-getgvar[groupCounter]==listcount[getvar[charlist]]
+getgvar[groupCounter]==getfellowshipcount[]
 s
 NavigatingToSoldier
 s

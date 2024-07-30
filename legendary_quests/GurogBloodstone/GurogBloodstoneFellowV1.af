@@ -404,7 +404,7 @@ STATE: {LootNote} ~~{
 				SetState {WaitForGroupToHaveNote}
 ~~ }
 STATE: {WaitForGroupToHaveNote} ~~ {
-	IF: Expr {getgvar[groupCounter]==listcount[getvar[charlist]]}
+	IF: Expr {getgvar[groupCounter]==getfellowshipcount[]}
 		DO: SetState {NavigatingToSoldier}
 ~~ }
 STATE: {NavigatingToSoldier} ~~ {
