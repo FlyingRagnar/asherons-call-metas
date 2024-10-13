@@ -50,7 +50,7 @@ STATE: {Settings} ~~ {
 	IF:	Always
 		DO:	DoAll
 				Chat {/ub opt set VTank.PatchExpressionEngine True}
-				DoExpr {setvar[exchangeList,listcreate[`Adherent's Crystal`,`Alchemist's Crystal`,`Artificer's Crystal`,`Pearl of Pierce Baning`,`Pearl of Bludgeon Baning`,`Pearl of Blade Baning`,`Pearl of Acid Baning`,`Pearl of Flame Baning`,`Pearl of Lightning Baning`,`Pearl of Frost Baning`,`Ben ten's Crystal`,`Berzerker's Crystal`,`Brawler's Crystal`,`Converter's Crystal`,`Corruptor's Crystal`,`Deceiver's Crystal`,`Fletcher's Crystal`,`Hunter's Crystal`,`Physician's Crystal`,`Oswald's Crystal`,`Zefir's Crystal`,`Warrior's Crystal`,`Rogue's Crystal`,`Knight's Crystal`,`Thorsten's Crystal`,`Pearl of Swift Killing`,`Mage's Jewel`,`Adherent's Crystal`,`Melee's Jewel`,`Elysa's Crystal`,`Pearl of Hermetic Linking`,`T'ing's Crystal`,`Hieromancer's Crystal`,`Life Giver's Crystal`,`Thief's Crystal`,`Enchanter's Crystal`,`Monarch's Crystal`,`Observer's Crystal`,`Tinker's Crystal`,`Lich's Pearl`,`Pearl of Blood Drinking`,`Chef's Crystal`,`Tusker's Jewel`,`Olthoi's Jewel`,`Executor's Jewel`,`Pearl of Impenetrability`,`Pearl of Defending`,`Gelid's Jewel`,`Astyrrian's Jewel`,`Pearl of Heart Seeking`,`Duelist's Jewel`,`Warrior's Jewel`,`Ben Ten's Crystal`,`Pearl of Spirit Drinking`]]}
+				DoExpr {setvar[exchangeList,listcreate[`Adherent's Crystal`,`Alchemist's Crystal`,`Artificer's Crystal`,`Pearl of Pierce Baning`,`Pearl of Bludgeon Baning`,`Pearl of Blade Baning`,`Pearl of Acid Baning`,`Pearl of Flame Baning`,`Pearl of Lightning Baning`,`Pearl of Frost Baning`,`Ben ten's Crystal`,`Berzerker's Crystal`,`Brawler's Crystal`,`Converter's Crystal`,`Corruptor's Crystal`,`Deceiver's Crystal`,`Fletcher's Crystal`,`Hunter's Crystal`,`Physician's Crystal`,`Oswald's Crystal`,`Zefir's Crystal`,`Warrior's Crystal`,`Rogue's Crystal`,`Knight's Crystal`,`Thorsten's Crystal`,`Pearl of Swift Killing`,`Mage's Jewel`,`Adherent's Crystal`,`Melee's Jewel`,`Elysa's Crystal`,`Pearl of Hermetic Linking`,`T'ing's Crystal`,`Hieromancer's Crystal`,`Life Giver's Crystal`,`Enchanter's Crystal`,`Monarch's Crystal`,`Observer's Crystal`,`Tinker's Crystal`,`Lich's Pearl`,`Pearl of Blood Drinking`,`Chef's Crystal`,`Tusker's Jewel`,`Olthoi's Jewel`,`Executor's Jewel`,`Pearl of Impenetrability`,`Pearl of Defending`,`Gelid's Jewel`,`Pearl of Heart Seeking`,`Duelist's Jewel`,`Warrior's Jewel`,`Ben Ten's Crystal`,`Pearl of Spirit Drinking`]]}
 				~~ Non-Exchange (Keep) List 
 				~~ Smith's Crystal (Armor Tinkering)
 				~~ Imbuer's Crystal (Magic Item Tinkering)
@@ -67,6 +67,8 @@ STATE: {Settings} ~~ {
 				~~ Resister's Crystal (Magic D) HMD?
 				~~ Evader's Crystal (Melee D) HMD?
 				~~ Vaulter's Crystal (Jump) VR Tree
+				~~ Astyrrian's Jewel (Hive Queen)
+				~~ Thief's Crystal (Hive Queen)
 				SetState {Begin}	
 ~~ }
 STATE: {Begin} ~~ {

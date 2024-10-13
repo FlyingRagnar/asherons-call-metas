@@ -513,7 +513,24 @@ STATE: {NavigatingToVisionOfHorrorRewards} ~~ {
 	IF: All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {TalkToVisionOfHorrorRewards}
+		DO: CallState {CheckForParagon} {TalkToVisionOfHorrorRewards}
+~~ }
+STATE: {CheckForParagon} ~~ {
+	~~ note: to set paragon item for each character, select item and run /ub mexec setpvar[paragonId,wobjectgetid[wobjectgetselection[]]]
+	IF: Expr {testpvar[paragonId]==0}
+		DO: Return
+	IF: Expr {testpvar[paragonId]==1}
+		DO: SetState {EquipParagon}
+~~ }
+STATE: {EquipParagon} ~~ {
+	IF: Expr {wobjectgetintprop[wobjectfindbyid[getpvar[paragonId]],10]>0}
+		DO: Return ~~ paragon item is already equipped
+	IF: Expr {wobjectgetintprop[wobjectfindbyid[getpvar[paragonId]],10]==0}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindbyid[getpvar[paragonId]]]}
+				DoExpr {actiontryuseitem[wobjectfindbyid[getpvar[paragonId]]]}
+	IF: SecsInStateGE 3
+		DO: Return
 ~~ }
 STATE: {TalkToVisionOfHorrorRewards} ~~ {
 	IF: Always

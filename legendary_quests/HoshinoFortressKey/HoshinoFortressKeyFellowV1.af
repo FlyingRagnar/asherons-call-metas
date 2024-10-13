@@ -431,6 +431,7 @@ STATE: {TellFellowshipToNavigateToTownOneLocationFour} ~~ {
 	IF: Always
 		DO: Chat {/ub bc /ub mexec vtsetmetastate[NavigatingToTownOneLocationFour]}
 ~~ }
+~~ TODO could make a better route for this location that fights along the way to not be so crowded going into house!
 STATE: {NavigatingToTownOneLocationFour} ~~ {
 	IF: Always
 		DO: DoAll
@@ -544,10 +545,11 @@ STATE: {DetermineTownTwoGatekeeperLocation} ~~ {
 		DO: DoAll
 				Chat {/f L-shaped house location identified}
 				SetState {TellFellowshipToNavigateToTownTwoLocationFour} ~~ L-shaped house
-	~~IF: SecsInStateGE 10
-	~~	DO: DoAll
-	~~			Chat {/f Unable to determine Bushi Gatekeeper location.  Waiting 5 minutes.}
-	~~			SetState {TellFellowshipToWaitForTownTwoReset}
+	~~ 78.30N 42.07W 0.27Z what building is this?
+	IF: SecsInStateGE 10
+		DO: DoAll
+				Chat {/f Unable to determine Bushi Gatekeeper location.  Waiting 5 minutes.}
+				SetState {TellFellowshipToWaitForTownTwoReset}
 ~~ }
 STATE: {TellFellowshipToWaitForTownTwoReset} ~~ {
 	IF: Always
@@ -670,6 +672,7 @@ STATE: {TellFellowshipToNavigateToTownTwoLocationThree} ~~ {
 	IF: Always
 		DO: Chat {/ub bc /ub mexec vtsetmetastate[NavigatingToTownTwoLocationThree]}
 ~~ }
+~~ TODO leader should navigate further into shop so that followers go in where they are safer, right now the doorway is a traffic jam
 STATE: {NavigatingToTownTwoLocationThree} ~~ {
 	IF: Always
 		DO: DoAll
@@ -858,6 +861,7 @@ STATE: {TellFellowshipToNavigateToTownThreeLocationTwo} ~~ {
 	IF: Always
 		DO: Chat {/ub bc /ub mexec vtsetmetastate[NavigatingToTownThreeLocationTwo]}
 ~~ }
+~~ TODO leader could go further into the house
 STATE: {NavigatingToTownThreeLocationTwo} ~~ {
 	IF: Always
 		DO: DoAll

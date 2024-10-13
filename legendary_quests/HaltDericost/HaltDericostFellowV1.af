@@ -388,6 +388,7 @@ STATE: {LootSealedTome} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]} ~~ everyone loot
+				DoExpr {vtsetsetting[UseDispelItems,`1`]}
 				EmbedNav nav16 {LootSealedTome.nav} 
 	IF: ItemCountGE 1 {Sealed Tome}
 		DO:	DoAll
@@ -454,7 +455,10 @@ STATE: {CheckKeys} ~~ {
 ~~ }
 STATE: {NavigatingToLadyDaenerahReward} ~~ {
 	IF:	Always
-		DO:	EmbedNav nav20 {TownNetworkToLadyDaenerah.nav}
+		DO:	DoAll
+				DoExpr {vtsetsetting[UseDispelItems,`0`]}
+				DoExpr {vtsetsetting[EnableCombat,`0`]}
+				EmbedNav nav20 {TownNetworkToLadyDaenerah.nav}
 	IF: All
 			NavEmpty
 			SecsInStateGE 3

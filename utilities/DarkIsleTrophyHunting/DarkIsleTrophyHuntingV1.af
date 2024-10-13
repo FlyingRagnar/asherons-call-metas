@@ -53,7 +53,7 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[IdlePeaceMode,`1`]}
 				DoExpr {vtsetsetting[EnableLooting,`1`]}
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]}
-				DoExpr {vtsetsetting[StopMacroOnDeath,`1`]}
+				DoExpr {vtsetsetting[StopMacroOnDeath,`0`]}
 				DoExpr {uboptset[`VTank.FixPortalLoops`,True]}
 				DoExpr {vtsetsetting[UseDispelItems,`0`]}
 				DoExpr {vtsetsetting[Recharge-Norm-Hitp,`70`]}

@@ -134,7 +134,7 @@ STATE: {CheckIfInWebGauntletLobby} ~~ {
 	IF: BlockE 596B0000
 		DO: SetState {NavigatingToWebLairOfHolcha}
 	IF: Not BlockE 596B0000
-		DO: CallState {CheckForTownNetworkDrop} {NavigatingToWebGauntletLobby}
+		DO: CallState {CheckForTownNetworkDrop} {NavigatingToWebGauntletHolcha}
 ~~ }
 STATE: {CheckForTownNetworkDrop} ~~ {
 	IF: CellE 00070145 ~~ Annex TN drop
@@ -202,13 +202,17 @@ STATE: {AttemptSecondaryRecallToTownNetwork} ~~ {
 				DoExpr {echo[Could not get to Town Network via recalls\! Aborting,15]}
 				SetState {CouldNotReachTownNetwork}
 ~~ }
+STATE: {NavigatingToWebGauntletHolcha} ~~ {
+	IF: Always
+		DO: CallState {NavigatingToWebGauntletLobby} {NavigatingToWebLairOfHolcha}
+~~ }
 STATE: {NavigatingToWebGauntletLobby} ~~ {
 	IF: Always
 		DO: EmbedNav nav12 {TownNetworkToWebGauntletLobby.nav}
 	IF:	All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {NavigatingToWebLairOfHolcha}
+		DO: Return
 ~~ }
 STATE: {NavigatingToWebLairOfHolcha} ~~ {
 	IF: Always
@@ -222,9 +226,29 @@ STATE: {UseWebLairOfHolcha} ~~ {
 	IF: Always
 		DO: Chat {/ub use Lair of Holcha}
 	IF: IntoPortal
-		DO: SetState {LootHolcha}
+		DO: SetState {AssessHolchaRoom}
 	IF: SecsInStateGE 5
 		DO: SetState {UseWebLairOfHolcha}
+~~ }
+STATE: {AssessHolchaRoom} ~~ {
+	IF: All
+			MobsInDist_Name 1 50 {Holcha}
+			Expr {isportaling[]==0}
+		DO: SetState {FightHolcha}
+	IF: All
+			Expr {wobjectfindnearestbynameandobjectclass[27,`Corpse of Holcha`] != 0}
+			Expr {isportaling[]==0}
+		DO: SetState {LootHolcha}
+	IF: All
+			Expr {isportaling[]==0}
+			NoMobsInDist 50
+		DO: SetState {}
+~~ }
+STATE: {FightHolcha} ~~ {
+	IF: All
+			Expr {wobjectfindnearestbynameandobjectclass[27,`Corpse of Holcha`] != 0}
+			Expr {isportaling[]==0}
+		DO: SetState {LootHolcha}
 ~~ }
 STATE: {LootHolcha} ~~ {
 	IF: All 
@@ -272,36 +296,16 @@ STATE: {CheckForHolchasHead} ~~ {
 			Expr {getvar[psociety]=='Web'}
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
-				SetState {NavigatingToWebHolchaSurfaceDoor}
+				CallState {CheckForTownNetworkDrop} {NavigatingToWebGauntletTrembOrh}
 	~~ todo add conditionals for other societies
 	IF: Expr {wobjectisvalid[getvar[corpse]] == 0} ~~ something went wrong, corpse is gone
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
 				SetState {LootHolcha}
 ~~ }
-STATE: {NavigatingToWebHolchaSurfaceDoor} ~~ {
+STATE: {NavigatingToWebGauntletTrembOrh} ~~ {
 	IF: Always
-		DO: EmbedNav nav1 {ToHolchaSurfaceDoor.nav}
-	IF: All 
-			NavEmpty
-			SecsInStateGE 3
-		DO: CallState {UseWebSurfaceDoor} {CheckTrembOrhFlag}
-~~ }
-STATE: {UseWebSurfaceDoor} ~~ {
-	IF: Always
-		DO: Chat {/ub use Surface}
-	IF: IntoPortal
-		DO: SetState {UseWebGauntletPortal}
-	IF: SecsInStateGE 5
-		DO: SetState {UseWebSurfaceDoor}
-~~ }
-STATE: {UseWebGauntletPortal} ~~ {
-	IF: Expr {isportaling[]==0}
-		DO: Chat {/ub use Eldrytch Web Gauntlet}
-	IF: IntoPortal
-		DO: Return
-	IF: SecsInStateGE 5
-		DO: SetState {UseWebGauntletPortal}
+		DO: CallState {NavigatingToWebGauntletLobby} {CheckTrembOrhFlag}
 ~~ }
 STATE: {CheckTrembOrhFlag} ~~ {
 	IF:	All
@@ -328,9 +332,29 @@ STATE: {UseWebLairOfTrembOrh} ~~ {
 	IF: Always
 		DO: Chat {/ub use Lair of Tremb'Orh}
 	IF: IntoPortal
-		DO: SetState {LootTrembOrh}
+		DO: SetState {AssessTrembOrhRoom}
 	IF: SecsInStateGE 5
 		DO: SetState {UseWebLairOfTrembOrh}
+~~ }
+STATE: {AssessTrembOrhRoom} ~~ {
+	IF: All
+			MobsInDist_Name 1 50 {Tremb'Orh}
+			Expr {isportaling[]==0}
+		DO: SetState {FightTrembOrh}
+	IF: All
+			Expr {wobjectfindnearestbynameandobjectclass[27,`Corpse of Tremb'Orh`] != 0}
+			Expr {isportaling[]==0}
+		DO: SetState {LootTrembOrh}
+	IF: All
+			Expr {isportaling[]==0}
+			NoMobsInDist 50
+		DO: SetState {}
+~~ }
+STATE: {FightTrembOrh} ~~ {
+	IF: All
+			Expr {wobjectfindnearestbynameandobjectclass[27,`Corpse of Tremb'Orh`] != 0}
+			Expr {isportaling[]==0}
+		DO: SetState {LootTrembOrh}
 ~~ }
 STATE: {LootTrembOrh} ~~ {
 	IF: All 
@@ -372,20 +396,16 @@ STATE: {CheckForHelmOfTrembOrh} ~~ {
 			Expr {getvar[psociety]=='Web'}
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
-				SetState {NavigatingToWebTrembOrhSurfaceDoor}
+				CallState {CheckForTownNetworkDrop} {NavigatingToWebGauntletGromnus}
 	~~ todo add more conditionals for other societies
 	IF: Expr {wobjectisvalid[getvar[corpse]] == 0} ~~ something went wrong, corpse is gone
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
 				SetState {LootTrembOrh}
 ~~ }
-STATE: {NavigatingToWebTrembOrhSurfaceDoor} ~~ {
+STATE: {NavigatingToWebGauntletGromnus} ~~ {
 	IF: Always
-		DO: EmbedNav nav3 {ToTrembOrhSurfaceDoor.nav}  ~~ this currently goes to wrong side of room!
-	IF: All 
-			NavEmpty
-			SecsInStateGE 3
-		DO: CallState {UseWebSurfaceDoor} {CheckGromnusFlag}
+		DO: CallState {NavigatingToWebGauntletLobby} {CheckGromnusFlag}
 ~~ }
 STATE: {CheckGromnusFlag} ~~ {
 	IF:	All
@@ -412,9 +432,29 @@ STATE: {UseWebLairOfGromnusChampion} ~~ {
 	IF: Always
 		DO: Chat {/ub use Lair of the Gromnus Champion}
 	IF: IntoPortal
-		DO: SetState {LootGromnusChampion}
+		DO: SetState {AssessGromnusRoom}
 	IF: SecsInStateGE 5
 		DO: SetState {UseWebLairOfGromnusChampion}
+~~ }
+STATE: {AssessGromnusRoom} ~~ {
+	IF: All
+			MobsInDist_Name 1 50 {Gromnus Champion}
+			Expr {isportaling[]==0}
+		DO: SetState {FightGromnusChampion}
+	IF: All
+			Expr {wobjectfindnearestbynameandobjectclass[27,`Corpse of Gromnus Champion`] != 0}
+			Expr {isportaling[]==0}
+		DO: SetState {LootGromnusChampion}
+	IF: All
+			Expr {isportaling[]==0}
+			NoMobsInDist 50
+		DO: SetState {}
+~~ }
+STATE: {FightGromnusChampion} ~~ {
+	IF: All
+			Expr {wobjectfindnearestbynameandobjectclass[27,`Corpse of Gromnus Champion`] != 0}
+			Expr {isportaling[]==0}
+		DO: SetState {LootGromnusChampion}
 ~~ }
 STATE: {LootGromnusChampion} ~~ {
 	IF: All 
@@ -456,20 +496,16 @@ STATE: {CheckForGromnusEye} ~~ {
 			Expr {getvar[psociety]=='Web'}
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
-				SetState {NavigatingToWebGromnusSurfaceDoor}
+				CallState {CheckForTownNetworkDrop} {NavigatingToWebGauntletFinish}
 	~~ todo add more conditionals for other societies
 	IF: Expr {wobjectisvalid[getvar[corpse]] == 0} ~~ something went wrong, corpse is gone
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
 				SetState {LootGromnusChampion}
 ~~ }
-STATE: {NavigatingToWebGromnusSurfaceDoor} ~~ {
+STATE: {NavigatingToWebGauntletFinish} ~~ {
 	IF: Always
-		DO: EmbedNav nav6 {ToGromnusSurfaceDoor.nav}
-	IF: All 
-			NavEmpty
-			SecsInStateGE 3
-		DO: CallState {UseWebSurfaceDoor} {NavigatingToWebMasterOfGauntlet}
+		DO: CallState {NavigatingToWebGauntletLobby} {NavigatingToWebMasterOfGauntlet}
 ~~ }
 STATE: {NavigatingToWebMasterOfGauntlet} ~~ {
 	IF: Always
@@ -507,7 +543,7 @@ STATE: {End} ~~ {
 	IF:	Always 
 		DO:	DoAll
 				DoExpr {stopwatchstop[getvar[stopWatch]]}
-				ChatExpr {\/f\ Gauntlet\ Bosses\  +cstr[floor[stopwatchelapsedseconds[getvar[stopWatch]]/60]]+\ Minutes\ +cstr[floor[stopwatchelapsedseconds[getvar[stopWatch]]%60]]+\ Seconds]}
+				ChatExpr {\/f\ Gauntlet\ Bosses\ +cstr[floor[stopwatchelapsedseconds[getvar[stopWatch]]/60]]+\ Minutes\ +cstr[floor[stopwatchelapsedseconds[getvar[stopWatch]]%60]]+\ Seconds]}
 				Chat {/ub myquests}
 				Chat {/vt loot load DefaultLoot.utl}
 	IF: All 
@@ -523,17 +559,11 @@ NAV: nav0 once ~~ {
 	pnt -30.2092753728231 -16.6892365773519 2.08333134651184E-05
 	pnt -30.2089674631755 -16.7001549402873 2.08333134651184E-05
 ~~ }
-NAV: nav1 once ~~ {
-	pnt -30.4170516331991 -18.7433783272902 2.08333134651184E-05
-~~ }
 NAV: nav2 once ~~ {
 	pnt -30.2792037010193 -16.6837772369385 2.08333134651184E-05
 	pnt -30.2117804845174 -16.6809007962545 2.08333134651184E-05
 	pnt -30.175153986613 -16.6808188756307 2.08333134651184E-05
 	pnt -30.1655399958293 -16.6700518608093 2.08333134651184E-05
-~~ }
-NAV: nav3 once ~~ {
-	pnt -30.4165338198344 -19.237760480245 2.08333134651184E-05
 ~~ }
 NAV: nav4 once ~~ {
 	pnt -30.346058400472 -16.6728219985962 2.08333134651184E-05
@@ -544,9 +574,6 @@ NAV: nav5 once ~~ {
 	pnt -30.1532282511393 -16.6850201924642 2.08333134651184E-05
 	pnt -30.1275401433309 -16.6867638587952 2.08333134651184E-05
 	pnt -30.1240551630656 -16.6995784123739 2.08333134651184E-05
-~~ }
-NAV: nav6 once ~~ {
-	pnt -30.7079377333323 -18.9885712782542 2.08333134651184E-05
 ~~ }
 NAV: nav7 once ~~ {
 	pnt -101.657279141744 -96.6906586329142 2.08333134651184E-05

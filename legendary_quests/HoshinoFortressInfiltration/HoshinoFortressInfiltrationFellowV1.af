@@ -77,7 +77,7 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[IdlePeaceMode,`1`]}
 				DoExpr {vtsetsetting[EnableLooting,`1`]}
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
-				DoExpr {vtsetsetting[StopMacroOnDeath,`0`]}
+				DoExpr {vtsetsetting[StopMacroOnDeath,`1`]}
 				DoExpr {uboptset[`VTank.FixPortalLoops`,True]}
 				DoExpr {uboptset[`VTank.VitalSharing`,True]}
 				DoExpr {vtsetsetting[UseDispelItems,`1`]}  
@@ -707,9 +707,15 @@ STATE: {UsePortalToFalatacotTemple} ~~ {
 ~~ }
 STATE: {GroupUpFalatacotTemple} ~~ {
 	IF: ItemCountLE 0 {Egg}
-		DO: SetState {WaitingForLeader}
+		DO: SetState {WaitingForLeaderFalatacotTemple}
 	IF: ItemCountGE 1 {Egg}
-		DO: CallState {VerifyGroup} {NavigatingToFalatacotTempleLoop}
+		DO: DoAll
+				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]} ~~ leader search for lever pieces
+				CallState {VerifyGroup} {NavigatingToFalatacotTempleLoop}
+~~ }
+STATE: {WaitingForLeaderFalatacotTemple} ~~ {
+	IF: ChatMatch {Fellowship present} ~~ this could be a more robust regex
+		DO: SetState {NavigatingToFalatacotTempleLoop}
 ~~ }
 STATE: {NavigatingToFalatacotTempleLoop} ~~ {
 	IF: Always
@@ -721,9 +727,7 @@ STATE: {NavigatingToFalatacotTempleLoop} ~~ {
 ~~ }
 STATE: {BrokenLeverSearch} ~~ {
 	IF: Always
-		DO: DoAll
-				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]} ~~ leader search for lever pieces
-				EmbedNav nav21 {FalatacotTempleLap.nav}
+		DO: EmbedNav nav21 {FalatacotTempleLap.nav}
 	IF: All 
 			Any 
 				Expr {listcount[wobjectfindallinventorybytemplatetype[72541]]==0}
@@ -752,9 +756,13 @@ STATE: {MakeLeverStageTwo} ~~ {
 	IF: Always
 		DO: DoExpr {actiontryapplyitem[listpop[wobjectfindallinventorybytemplatetype[72543]],listpop[wobjectfindallinventorybytemplatetype[72544]]]}
 	IF: ItemCountGE 1 {Lever Handle}
-		DO: SetState {NavigatingToFalatacotTempleLeverBox}
+		DO: Chat {/ub bc /ub mexec vtsetmetastate[FinishFalatacotLoop]}
 	IF: SecsInStateGE 5
 		DO: SetState {MakeLeverStageTwo}
+~~ }
+STATE: {FinishFalatacotLoop} ~~ {
+	IF: NavEmpty
+		DO: SetState {NavigatingToFalatacotTempleLeverBox}
 ~~ }
 STATE: {NavigatingToFalatacotTempleLeverBox} ~~ {
 	IF: Always
@@ -767,16 +775,12 @@ STATE: {NavigatingToFalatacotTempleLeverBox} ~~ {
 		DO: SetState {GiveLeverHandleToLeverBox}
 ~~ }
 STATE: {GiveLeverHandleToLeverBox} ~~ {
-	IF: Always
+	IF: ItemCountGE 1 {Lever Handle}
 		DO: Chat {/ub give Lever Handle to Lever Box}
 	IF: SecsInStateGE 10
 		DO: SetState {GiveLeverHandleToLeverBox}
 	IF: ItemCountLE 0 {Lever Handle}
-		DO: SetState {TellFellowshipToNavigateToFalatacotTemplePartTwo}
-~~ }
-STATE: {TellFellowshipToNavigateToFalatacotTemplePartTwo} ~~ {
-	IF: Always
-		DO: Chat {/ub bc /ub mexec vtsetmetastate[NavigatingToFalatacotTemplePartTwo]}
+		DO: SetState {NavigatingToFalatacotTemplePartTwo}
 ~~ }
 STATE: {NavigatingToFalatacotTemplePartTwo} ~~ {
 	IF: Always
@@ -973,14 +977,33 @@ STATE: {NavigatingToMareenoDonn} ~~ {
 	IF: All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {GiveInsigniaToMareenoDonn}
+		DO: CallState {CheckForParagon} {GiveInsigniaToMareenoDonn}
+~~ }
+STATE: {CheckForParagon} ~~ {
+	~~ note: to set paragon item for each character, select item and run /ub mexec setpvar[paragonId,wobjectgetid[wobjectgetselection[]]]
+	IF: Expr {testpvar[paragonId]==0}
+		DO: Return
+	IF: Expr {testpvar[paragonId]==1}
+		DO: SetState {EquipParagon}
+~~ }
+STATE: {EquipParagon} ~~ {
+	IF: Expr {wobjectgetintprop[wobjectfindbyid[getpvar[paragonId]],10]>0}
+		DO: Return ~~ paragon item is already equipped
+	IF: Expr {wobjectgetintprop[wobjectfindbyid[getpvar[paragonId]],10]==0}
+		DO: DoAll
+				DoExpr {actiontryuseitem[wobjectfindbyid[getpvar[paragonId]]]}
+				DoExpr {actiontryuseitem[wobjectfindbyid[getpvar[paragonId]]]}
+	IF: SecsInStateGE 3
+		DO: Return
 ~~ }
 STATE: {GiveInsigniaToMareenoDonn} ~~ {
 	IF: Always
 		DO: Chat {/ub give First Lieutenant's Insignia. to Mareeno Donn}
 	IF: SecsInStateGE 10
 		DO: SetState {GiveInsigniaToMareenoDonn}
-	IF: ItemCountLE 0 {First Lieutenant's Insignia.}
+	IF: All
+			ItemCountLE 0 {First Lieutenant's Insignia.}
+			SecsInStateGE 5
 		DO: SetState {NavigatingToColo}
 ~~ }
 STATE: {NavigatingToColo} ~~ {

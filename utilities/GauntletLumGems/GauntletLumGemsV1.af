@@ -53,22 +53,65 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[IdlePeaceMode,`1`]}
 				DoExpr {uboptset[`VTank.FixPortalLoops`,True]}	
 				DoExpr {vtsetsetting[OpenDoors,`1`]}
+				DoExpr {setvar[desiredGemCount,5]}
+				DoExpr {setvar[lumNeeded,0]}
 				SetState {Begin}				
 ~~ }
 STATE: {Begin} ~~ {
 	IF: Always
+		DO: DoExpr {echo[Gauntlet Lum Gems Meta by Sun Invictus,15]}
+	IF: SecsInStateGE 5
+		DO: CallState {AssessPlayer} {RecordItemCounts}
+~~ }
+STATE: {AssessPlayer} ~~ {
+	IF: Always
 		DO: DoAll
-				DoExpr {echo[Gauntlet Lum Gems Meta by Sun Invictus,15]}
+				DoExpr {echo[`Assessing player...`,15]}
+				DoExpr {setvar[assesstime,floor[getunixtime[]]]}
 				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}
-	IF: SecsInStateGE 10 ~~ wait 10 seconds to ensure complete id
+	IF: All
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+			Expr {wobjectlastidtime[wobjectgetplayer[]]>=getvar[assesstime]}
+		DO: Return
+~~ }
+STATE: {RecordItemCounts} ~~ {
+	IF: Always
+		DO: DoAll
+				DoExpr {setvar[neededRareDamageGems,getvar[desiredGemCount]-getitemcountininventorybynamerx[Luminous Crystal of Rare Damage Reduction V]}
+				DoExpr {setvar[neededRareArmorGems,getvar[desiredGemCount]-getitemcountininventorybynamerx[Luminous Crystal of Rare Armor Damage Boost V]}
+				DoExpr {setvar[neededVitalityGems,getvar[desiredGemCount]-getitemcountininventorybynamerx[Luminous Crystal of Vitality]}
+				SetState {CheckGemCounts}
+~~ }
+STATE: {CheckGemCounts} ~~ {
+	IF: Any
+			Expr {getvar[neededRareDamageGems]>0}  ~~ 0 or negative number indicates we have 5+ already
+			Expr {getvar[neededRareArmorGems]>0}
+			Expr {getvar[neededVitalityGems]>0}
+		DO: SetState {CalculateLumNeeded}
+	IF: All
+			Expr {getvar[neededRareDamageGems]<=0} 
+			Expr {getvar[neededRareArmorGems]<=0}
+			Expr {getvar[neededVitalityGems]<=0}
+		DO: DoAll
+				DoExpr {echo[I have enough lum gems\!,15]}
+				SetState {End}
+~~ }
+STATE: {CalculateLumNeeded} ~~ {
+	IF: Expr {getvar[neededRareDamageGems]>0}
+		DO: DoExpr {setvar[lumNeeded],getvar[lumNeeded]+(getvar[neededRareDamageGems]*10000)}
+	IF: Expr {getvar[neededRareArmorGems]>0}
+		DO: DoExpr {setvar[lumNeeded],getvar[lumNeeded]+(getvar[neededRareArmorGems]*10000)}
+	IF: Expr {getvar[neededVitalityGems]>0}
+		DO: DoExpr {setvar[lumNeeded],getvar[lumNeeded]+(getvar[neededVitalityGems]*10000)}
+	IF: SecsInStateGE 3
 		DO: SetState {CheckEnoughLum}
 ~~ }
 STATE: {CheckEnoughLum} ~~ {
-	IF: Expr {getcharquadprop[6] < 125000}  ~~ want to buy 5 rare damage (50K), 5 rare armor (50K), and 5 vitality (25K)
+	IF: Expr {getcharquadprop[6] < getvar[lumNeeded]} 
 		DO: DoAll
-				DoExpr {echo[`Not enough lum (125K) for 5 of each lum gem`,15]}
+				DoExpr {echo[`Not enough luminance ` +getvar[lumNeeded]+ ` to buy gems needed`,15]}
 				SetState {End}
-	IF: Expr {getcharquadprop[6] >= 125000} 
+	IF: Expr {getcharquadprop[6] >= getvar[lumNeeded]} 
 		DO: SetState {GoToNalicana}
 ~~ }
 STATE: {GoToNalicana} ~~ {

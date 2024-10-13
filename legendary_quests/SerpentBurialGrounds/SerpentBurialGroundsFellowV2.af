@@ -293,6 +293,8 @@ STATE: {BloodLoatherShikkenMoriyakiWeapon} ~~ {
 				DoExpr {vtsetsetting[EnableCombat,`1`]}
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]} ~~ loot boss
 				SetState {LootBoneFragment}
+	IF: Death
+		DO: SetState {End}
 ~~ }
 STATE: {LureBladeShikkenMoriyakiWeapon} ~~ {
 	IF: Expr {wobjectfindnearestbynameandobjectclass[1,`Spectral Frost Nodachi`] != 0}
@@ -315,6 +317,8 @@ STATE: {LureBladeShikkenMoriyakiWeapon} ~~ {
 				DoExpr {vtsetsetting[EnableCombat,`1`]}
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]}
 				SetState {LootBoneFragment}
+	IF: Death
+		DO: SetState {End}
 ~~ }
 STATE: {LootBoneFragment} ~~ {
 	IF: Always
@@ -323,6 +327,8 @@ STATE: {LootBoneFragment} ~~ {
 		DO: DoAll
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
 				SetState {NavigatingToWeaponChest}
+	IF: Death
+		DO: SetState {End}
 ~~ }
 STATE: {NavigatingToWeaponChest} ~~ {
 	IF: Always
