@@ -260,7 +260,7 @@ STATE: {CheckForCrystalArray} ~~ {
 STATE: {AssaultTheKeep} ~~ {
 	IF: Always
 		DO: DoAll
-				Chat {/vt settings loadchar landcontrol}
+				Chat {/vt settings loadchar landcontrolcrystal}
 				DoExpr {vtsetsetting[EnableCombat,`1`]}
 				DoExpr {vtsetsetting[NavPriorityBoost,`0`]}
 				EmbedNav nav12 {ToCrystalArray.nav} 
@@ -268,7 +268,7 @@ STATE: {AssaultTheKeep} ~~ {
 		DO: SetState {UseBannerToFreeKeep}
 ~~ }
 STATE: {UseBannerToFreeKeep} ~~ {
-	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`Crystal Array`]]==0}
+	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`Creeping Blight Banner of the Courtyard`]]==0}
 		DO: CallState {CheckForTownNetworkDrop} {NavigatingToNorthwatch}
 	IF: Always
 		DO: Chat {/ub usel Creeping Blight Banner of the Courtyard}

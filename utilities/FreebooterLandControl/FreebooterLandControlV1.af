@@ -284,7 +284,7 @@ STATE: {CheckForCrystalArray} ~~ {
 STATE: {AssaultTheKeep} ~~ {
 	IF: Always
 		DO: DoAll
-				Chat {/vt settings loadchar landcontrol}
+				Chat {/vt settings loadchar landcontrolcrystal}
 				DoExpr {vtsetsetting[EnableCombat,`1`]}
 				DoExpr {vtsetsetting[NavPriorityBoost,`0`]}
 				EmbedNav nav12 {ToCrystalArray.nav}
@@ -292,37 +292,13 @@ STATE: {AssaultTheKeep} ~~ {
 		DO: SetState {UseBannerToFreeKeep}
 ~~ }
 STATE: {UseBannerToFreeKeep} ~~ {
-	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`Crystal Array`]]==0}
+	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`Creeping Blight Banner of the Courtyard`]]==0}
 		DO: SetState {DetermineSocietyStart}
 	IF: Always
 		DO: Chat {/ub usel Creeping Blight Banner of the Courtyard}
 	IF: SecsInStateGE 10
 		DO: SetState {UseBannerToFreeKeep}
 ~~ }
-
-~~ unused now
-STATE: {JunctionBannerTarget} ~~ {
-	IF: Expr {getcharskill_traininglevel[43] >= 2} ~~ Void magic trained/specialized
-		DO: DoAll
-				Chat {/vt settings loadchar landcontrol}
-				DoExpr {vtsetsetting[EnableCombat,`1`]}
-				DoExpr {vtsetsetting[NavPriorityBoost,`0`]}
-				SetState {CourtyardBanner}
-	IF: Expr {getcharskill_traininglevel[34] >= 2} ~~ War magic trained/specialized
-		DO: DoAll
-				DoExpr {vtsetsetting[EnableCombat,`1`]}
-				DoExpr {vtsetsetting[NavPriorityBoost,`0`]}
-				SetState {SpireBanner}
-	IF: Expr {getcharskill_traininglevel[41] >= 2} ~~ 2H weapons training/specialized
-		DO: DoAll
-				Chat {/vt settings loadchar landcontrol}
-				DoExpr {vtsetsetting[EnableCombat,`1`]}
-				DoExpr {vtsetsetting[AttackDistance,`0.01666`]}  ~~ 4, otherwise tries to attack through walls
-				DoExpr {vtsetsetting[NavPriorityBoost,`0`]}
-				SetState {TowerBanner}
-~~ }
-~~ end unused
-
 STATE: {NavigatingtoCourtyardBanner} ~~ {
 	IF:	Always
 		DO:	DoAll
