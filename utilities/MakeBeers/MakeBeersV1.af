@@ -77,7 +77,7 @@ STATE: {Begin} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {echo[Make Beers Meta by Sun Invictus,15]}
-				DoExpr {echo[If ingredients needed, goes shopping to Grocer Jaffres Din in Sanamar and Shopkeeper in Westwatch,15]}
+				DoExpr {echo[If ingredients needed\, goes shopping to Grocer Jaffres Din in Sanamar and Shopkeeper in Westwatch,15]}
 				DoExpr {echo[Shopping is manual unless you have vendor profiles setup for these NPCs,15]}
 	IF: SecsInStateGE 5
 		DO: CallState {CheckForTownNetworkDrop} {NavigatingToJaffres}
@@ -121,7 +121,7 @@ STATE: {CheckIfHaveBeerIngredients} ~~ {
 				SetState {MakeBeers}
 	IF: SecsInStateGE 3
 		DO: DoAll
-				DoExpr {echo[Do no have ingredients to make beers\, going shopping,15]}
+				DoExpr {echo[Do not have ingredients to make beers\, going shopping,15]}
 				CallState {CheckForTownNetworkDrop} {NavigatingToJaffres}
 ~~ }
 STATE: {CheckForTownNetworkDrop} ~~ {
@@ -245,26 +245,26 @@ STATE: {MakeBeers} ~~ {
 		DO: SetState {End}
 ~~ }
 STATE: {DetermineAmberBarleyBeerToMake} ~~ {
-	IF: Expr {getitemcountininventorybynamerx[Bottle of Amber Ape]<getitemcountininventorybynamerx[Bottle of Hunter's Stock Amber]}
+	IF: Expr {getitemcountininventorybynamerx[Amber Ape]<getitemcountininventorybynamerx[Hunter's Stock Amber]}
 		DO: CallState {MakeAmberApe} {MakeBeers}
-	IF: Expr {getitemcountininventorybynamerx[Bottle of Amber Ape]>=getitemcountininventorybynamerx[Bottle of Hunter's Stock Amber]}
+	IF: Expr {getitemcountininventorybynamerx[Amber Ape]>=getitemcountininventorybynamerx[Hunter's Stock Amber]}
 		DO: CallState {MakeHuntersStockAmber} {MakeBeers}
 ~~ }
 STATE: {DeterminePlainBarleyBeerToMake} ~~ {
-	IF: All 
-			Expr {getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]}
-			Expr {getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bottle of Bobo's Stout]}
-			Expr {getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bottle of Tusker Spit Ale]}
+	IF: Any 
+			Expr {getitemcountininventorybynamerx[Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Duke Raoul's Distillation]}
+			Expr {getitemcountininventorybynamerx[Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bobo's Stout]}
+			Expr {getitemcountininventorybynamerx[Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Tusker Spit Ale]}
 		DO: CallState {MakeApothecaryZongosStout} {MakeBeers}
-	IF: All 
-			Expr {getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]}
-			Expr {getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bottle of Bobo's Stout]}
-			Expr {getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bottle of Tusker Spit Ale]}
+	IF: Any 
+			Expr {getitemcountininventorybynamerx[Duke Raoul's Distillation]<getitemcountininventorybynamerx[Apothecary Zongo's Stout]}
+			Expr {getitemcountininventorybynamerx[Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bobo's Stout]}
+			Expr {getitemcountininventorybynamerx[Duke Raoul's Distillation]<getitemcountininventorybynamerx[Tusker Spit Ale]}
 		DO: CallState {MakeDukeRaoulsDistillation} {MakeBeers}
-	IF: All 
-			Expr {getitemcountininventorybynamerx[Bottle of Bobo's Stout]<getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]}
-			Expr {getitemcountininventorybynamerx[Bottle of Bobo's Stout]<getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]}
-			Expr {getitemcountininventorybynamerx[Bottle of Bobo's Stout]<getitemcountininventorybynamerx[Bottle of Tusker Spit Ale]}
+	IF: Any
+			Expr {getitemcountininventorybynamerx[Bobo's Stout]<getitemcountininventorybynamerx[Apothecary Zongo's Stout]}
+			Expr {getitemcountininventorybynamerx[Bobo's Stout]<getitemcountininventorybynamerx[Duke Raoul's Distillation]}
+			Expr {getitemcountininventorybynamerx[Bobo's Stout]<getitemcountininventorybynamerx[Tusker Spit Ale]}
 		DO: CallState {MakeBobosStout} {MakeBeers}
 	IF: SecsInStateGE 3 ~~ Tusker Spit Ale is either less than the others, or they are all tied/same number
 		DO: CallState {MakeTuskerSpitAle} {MakeBeers}

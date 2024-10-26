@@ -344,7 +344,7 @@ STATE: {JumpToOriginsTest} ~~ {
 	IF: IntoPortal
 		DO: SetState {NavigatingToHiveOlthoiEgg}
 	IF: SecsInStateGE 20
-		DO: Chat {/ub usel Origins Test}
+		DO: Chat {/ub usel Origins Chamber}
 ~~ }
 STATE: {NavigatingToHiveOlthoiEgg} ~~ {
 	IF: Always
@@ -626,7 +626,7 @@ STATE: {KillQueen} ~~ {
 ~~ }
 STATE: {LootQueen} ~~ {
 	IF: Expr {wobjectfindnearestbynameandobjectclass[16,`Olthoi Hive Queen's Remains`] != 0}
-		DO: Chat {/ub usel Corpse of Olthoi Hive Queen}
+		DO: Chat {/ub usel Olthoi Hive Queen's Remains}
 	IF: ItemCountGE 1 {Olthoi Hive Queen Carapace}
 		DO: SetState {NavigatingToQueensTreasury}
 	IF: SecsInStateGE 10 

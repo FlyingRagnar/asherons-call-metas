@@ -3165,7 +3165,7 @@ i
 i
 20
 s
-/ub usel Origins Test
+/ub usel Origins Chamber
 s
 JumpToOriginsTest
 i
@@ -5933,7 +5933,7 @@ e
 s
 wobjectfindnearestbynameandobjectclass[16,`Olthoi Hive Queen's Remains`] != 0
 s
-/ub usel Corpse of Olthoi Hive Queen
+/ub usel Olthoi Hive Queen's Remains
 s
 LootQueen
 i

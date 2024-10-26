@@ -396,7 +396,7 @@ n
 s
 e
 s
-echo[If ingredients needed, goes shopping to Grocer Jaffres Din in Sanamar and Shopkeeper in Westwatch,15]
+echo[If ingredients needed\, goes shopping to Grocer Jaffres Din in Sanamar and Shopkeeper in Westwatch,15]
 i
 7
 TABLE
@@ -1009,7 +1009,7 @@ n
 s
 e
 s
-echo[Do no have ingredients to make beers\, going shopping,15]
+echo[Do not have ingredients to make beers\, going shopping,15]
 i
 5
 TABLE
@@ -2084,7 +2084,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Amber Ape]<getitemcountininventorybynamerx[Bottle of Hunter's Stock Amber]
+getitemcountininventorybynamerx[Amber Ape]<getitemcountininventorybynamerx[Hunter's Stock Amber]
 TABLE
 2
 k
@@ -2116,7 +2116,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Amber Ape]>=getitemcountininventorybynamerx[Bottle of Hunter's Stock Amber]
+getitemcountininventorybynamerx[Amber Ape]>=getitemcountininventorybynamerx[Hunter's Stock Amber]
 TABLE
 2
 k
@@ -2135,7 +2135,7 @@ MakeBeers
 s
 DetermineAmberBarleyBeerToMake
 i
-2
+3
 i
 5
 TABLE
@@ -2157,7 +2157,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]
+getitemcountininventorybynamerx[Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Duke Raoul's Distillation]
 i
 26
 TABLE
@@ -2170,7 +2170,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bottle of Bobo's Stout]
+getitemcountininventorybynamerx[Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bobo's Stout]
 i
 26
 TABLE
@@ -2183,7 +2183,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Bottle of Tusker Spit Ale]
+getitemcountininventorybynamerx[Apothecary Zongo's Stout]<getitemcountininventorybynamerx[Tusker Spit Ale]
 TABLE
 2
 k
@@ -2202,7 +2202,7 @@ MakeBeers
 s
 DeterminePlainBarleyBeerToMake
 i
-2
+3
 i
 5
 TABLE
@@ -2224,7 +2224,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]
+getitemcountininventorybynamerx[Duke Raoul's Distillation]<getitemcountininventorybynamerx[Apothecary Zongo's Stout]
 i
 26
 TABLE
@@ -2237,7 +2237,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bottle of Bobo's Stout]
+getitemcountininventorybynamerx[Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bobo's Stout]
 i
 26
 TABLE
@@ -2250,7 +2250,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]<getitemcountininventorybynamerx[Bottle of Tusker Spit Ale]
+getitemcountininventorybynamerx[Duke Raoul's Distillation]<getitemcountininventorybynamerx[Tusker Spit Ale]
 TABLE
 2
 k
@@ -2269,7 +2269,7 @@ MakeBeers
 s
 DeterminePlainBarleyBeerToMake
 i
-2
+3
 i
 5
 TABLE
@@ -2291,7 +2291,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Bobo's Stout]<getitemcountininventorybynamerx[Bottle of Apothecary Zongo's Stout]
+getitemcountininventorybynamerx[Bobo's Stout]<getitemcountininventorybynamerx[Apothecary Zongo's Stout]
 i
 26
 TABLE
@@ -2304,7 +2304,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Bobo's Stout]<getitemcountininventorybynamerx[Bottle of Duke Raoul's Distillation]
+getitemcountininventorybynamerx[Bobo's Stout]<getitemcountininventorybynamerx[Duke Raoul's Distillation]
 i
 26
 TABLE
@@ -2317,7 +2317,7 @@ n
 s
 e
 s
-getitemcountininventorybynamerx[Bottle of Bobo's Stout]<getitemcountininventorybynamerx[Bottle of Tusker Spit Ale]
+getitemcountininventorybynamerx[Bobo's Stout]<getitemcountininventorybynamerx[Tusker Spit Ale]
 TABLE
 2
 k

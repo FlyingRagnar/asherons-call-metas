@@ -719,7 +719,10 @@ STATE: {WaitingForLeaderFalatacotTemple} ~~ {
 ~~ }
 STATE: {NavigatingToFalatacotTempleLoop} ~~ {
 	IF: Always
-		DO: EmbedNav nav20 {ToFalatacotTempleLoop.nav}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableNav,`1`]}
+				DoExpr {vtsetsetting[NavPriorityBoost,`0`]}
+				EmbedNav nav20 {ToFalatacotTempleLoop.nav}
 	IF:	All
 			NavEmpty
 			SecsInStateGE 3

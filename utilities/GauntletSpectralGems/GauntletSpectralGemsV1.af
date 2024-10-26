@@ -259,13 +259,11 @@ STATE: {BuyGYCoins} ~~ {
 		DO: Chat {/ub autovendor AbsalomSarrafOneCoin.utl}
 	IF: All 
 			ChatMatch {AutoVendor finished:}
-			ItemCountGE 2 {Promissory Note}
 		DO: DoAll
 				DoExpr {setvar[promNotes,getitemcountininventorybyname[`Promissory Note`]]}
 				SetState {BuyGYCoins}
 	IF: All
 			ChatMatch {AutoVendor finished:}
-			ItemCountLE 1 {Promissory Note}
 		DO: SetState {OpenBoxesOfTen}
 ~~ }
 STATE: {OpenBoxesOfTen} ~~ {

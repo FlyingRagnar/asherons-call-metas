@@ -110,8 +110,14 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[PetRangeMode,`1`]}
 				DoExpr {vtsetsetting[PetCustomRange,`0.0625`]} ~~ 15
 				DoExpr {vtsetsetting[AttackDistance,`0.025`]} ~~ 6
-				DoExpr {vtsetsetting[ApproachDistance,`0.0125`]} ~~ 3
-				SetState {Begin}				
+				DoExpr {vtsetsetting[ApproachDistance,`0.01666`]} ~~ 4 for melees
+	IF: Any
+			Expr {getcharskill_traininglevel[43] >= 2} ~~ Void magic trained/specialized
+			Expr {getcharskill_traininglevel[34] >= 2} ~~ War magic trained/specialized
+			Expr {getcharskill_traininglevel[47] >= 2} ~~ Missile weapons trained/specialized
+		DO: DoExpr {vtsetsetting[AttackDistance,`0.041666`]} ~~ attack distance 10
+	IF: Always
+		DO: SetState {Begin}
 ~~ }
 STATE: {Begin} ~~ {
 	IF: Always
@@ -360,9 +366,7 @@ STATE: {CheckSpireCapture} ~~ {
 ~~ }
 STATE: {NavigatingToTowerBanner} ~~ {
 	IF:	Always
-		DO:	DoAll
-				DoExpr {vtsetsetting[AttackDistance,`0.01666`]}  ~~ 4, otherwise tries to attack through walls
-				EmbedNav nav10 {FreebooterToTower.nav}
+		DO:	EmbedNav nav10 {FreebooterToTower.nav}
 	IF: All
 			NavEmpty
 			SecsInStateGE 3
@@ -377,8 +381,6 @@ STATE: {CheckTowerBanner} ~~ {
 		DO: SetState {CheckTowerBanner}
 ~~ }
 STATE: {DefendBanner} ~~ {
-	IF: Always
-		DO: DoExpr {vtsetsetting[AttackDistance,`0.041666`]} ~~ 10 to kill mobs around banner
 	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`Master Mage`]]>0}
 		DO: DoAll
 				DoExpr {vtsetsetting[EnableCombat,`0`]}

@@ -22,7 +22,7 @@
 ~~		None				EmbedNav			ChatExpr				SetOpt			
 ~~		SetState			CallState			SetWatchdog				CreateView		
 ~~		Chat				Return				ClearWatchdog			DestroyView		
-~~		DoAll				DoExpr				GetOpt					DestroyAllViews	
+~~		DO: DoAll				DoExpr				GetOpt					DestroyAllViews	
 ~~																						
 ~~ All recognized NAV types:															
 ~~		circular			follow														
@@ -43,9 +43,12 @@ STATE: {Default} ~~ {
 ~~ }
 STATE: {Settings} ~~ {
 	IF:	Always
-		DO:	DoAll
-				DoExpr {setvar[completeQuests,`Completed Legendary Quests:`]}
-				DoExpr {setvar[incompleteQuests,`Incomplete Legendary Quests:`]}
+		DO: DoAll
+				Chat {/ub opt set VTank.PatchExpressionEngine True}
+				DoExpr {setvar[completeQuests,``]}
+				DoExpr {setvar[completeCount,0]}
+				DoExpr {setvar[incompleteQuests,``]}
+				DoExpr {setvar[incompleteCount,0]}
 				DoExpr {echo[Legendary Quests Meta by Sun Invictus,15]}
 				SetState {Begin}				
 ~~ }
@@ -63,167 +66,330 @@ STATE: {RefreshQuests} ~~ {
 ~~ }
 STATE: {RecordQuestStatus} ~~ {
 	IF: Expr {hexstr[(getquestktprogress[legendaryquestsa]&0x1)]==`0x1`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Hoshino Must Die`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Hoshino Must Die`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x1]!=`0x1`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Hoshino Must Die`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Hoshino Must Die`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x2]==`0x2`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Hive Queen`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Hive Queen`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x2]!=`0x2`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Hive Queen`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Hive Queen`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x4]==`0x4`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Four Corners`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Four Corners`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x4]!=`0x4`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Four Corners`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Four Corners`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x8]==`0x8`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` End of Days/Crimson Scarab Corruption`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` End of Days/Crimson Scarab Corruption`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x8]!=`0x8`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` End of Days/Crimson Scarab Corruption`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` End of Days/Crimson Scarab Corruption`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x10]==`0x10`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Fear Factory`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Fear Factory`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x10]!=`0x10`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Fear Factory`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Fear Factory`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x20]==`0x20`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Lugian Assault/Presk's Bunker`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Lugian Assault/Presk's Bunker`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x20]!=`0x20`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Lugian Assault/Presk's Bunker`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Lugian Assault/Presk's Bunker`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x40]==`0x40`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Gurog Creation`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Gurog Creation`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x40]!=`0x40`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Gurog Creation`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Gurog Creation`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x80]==`0x80`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Rynthid Assessment`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Rynthid Assessment`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x80]!=`0x80`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Rynthid Assessment`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Rynthid Assessment`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x100]==`0x100`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Defeating the Curator`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Defeating the Curator`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x100]!=`0x100`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Defeating the Curator`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Defeating the Curator`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x200]==`0x200`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Hoshino Fortress`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Hoshino Fortress`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x200]!=`0x200`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Hoshino Fortress`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Hoshino Fortress`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x400]==`0x400`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Oubliette`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Oubliette`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x400]!=`0x400`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Oubliette`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Oubliette`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x800]==`0x800`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Halt Dericost`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Halt Dericost`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x800]!=`0x800`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Halt Dericost`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Halt Dericost`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x1000]==`0x1000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Slave Master`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Slave Master`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x1000]!=`0x1000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Slave Master`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Slave Master`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x2000]==`0x2000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Geraine's Study`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Geraine's Study`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x2000]!=`0x2000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Geraine's Study`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Geraine's Study`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x4000]==`0x4000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Bloodstone Investigation`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Bloodstone Investigation`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x4000]!=`0x4000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Bloodstone Investigation`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Bloodstone Investigation`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x8000]==`0x8000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Deewain`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Deewain`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x8000]!=`0x8000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Deewain`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Deewain`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x10000]==`0x10000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Empyrean Rescue`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Empyrean Rescue`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x10000]!=`0x10000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Empyrean Rescue`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Empyrean Rescue`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x20000]==`0x20000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Rynthid Foothold/Genesis`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Rynthid Foothold/Genesis`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x20000]!=`0x20000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Rynthid Foothold/Genesis`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Rynthid Foothold/Genesis`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x40000]==`0x40000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Mhoire Castle`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Mhoire Castle`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x40000]!=`0x40000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Mhoire Castle`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Mhoire Castle`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x80000]==`0x80000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Liberation of Uziz`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Liberation of Uziz`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsa]&0x80000]!=`0x80000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Liberation of Uziz`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Liberation of Uziz`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[(getquestktprogress[legendaryquestsb]&0x1)]==`0x1`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Dream Reaver`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Dream Reaver`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x1]!=`0x1`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Dream Reaver`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Dream Reaver`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x2]==`0x2`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Janthef's Release`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Janthef's Release`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x2]!=`0x2`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Janthef's Release`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Janthef's Release`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x4]==`0x4`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Shroud of Emotion`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Shroud of Emotion`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x4]!=`0x4`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Shroud of Emotion`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Shroud of Emotion`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x8]==`0x8`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Mouf P`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Mouf P`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x8]!=`0x8`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Mouf P`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Mouf P`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x10]==`0x10`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Serpent Burial Grounds`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Serpent Burial Grounds`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x10]!=`0x10`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Serpent Burial Grounds`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Serpent Burial Grounds`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x20]==`0x20`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Lost Lore`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Lost Lore`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x20]!=`0x20`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Lost Lore`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Lost Lore`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x40]==`0x40`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Rynthid Foundry`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Rynthid Foundry`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x40]!=`0x40`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Rynthid Foundry`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Rynthid Foundry`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x80]==`0x80`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Releasing the Light`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Releasing the Light`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x80]!=`0x80`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Releasing the Light`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Releasing the Light`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x100]==`0x100`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` 1st Sister/Bulb of Mornings`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` 1st Sister/Bulb of Mornings`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x100]!=`0x100`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` 1st Sister/Bulb of Mornings`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` 1st Sister/Bulb of Mornings`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x200]==`0x200`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` 2nd Sister/Bulb of Harvests`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` 2nd Sister/Bulb of Harvests`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x200]!=`0x200`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` 2nd Sister/Bulb of Harvests`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` 2nd Sister/Bulb of Harvests`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x400]==`0x400`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` 3rd Sister/Bulb of Twilight`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` 3rd Sister/Bulb of Twilight`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x400]!=`0x400`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` 3rd Sister/Bulb of Twilight`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` 3rd Sister/Bulb of Twilight`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x800]==`0x800`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Nanjou Stockade`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Nanjou Stockade`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x800]!=`0x800`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Nanjou Stockade`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Nanjou Stockade`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x1000]==`0x1000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Tanada Slaughter`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Tanada Slaughter`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x1000]!=`0x1000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Tanada Slaughter`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Tanada Slaughter`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x2000]==`0x2000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Count Phainor`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Count Phainor`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x2000]!=`0x2000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Count Phainor`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Count Phainor`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x4000]==`0x4000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Save Karul`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Save Karul`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x4000]!=`0x4000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Save Karul`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Save Karul`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x8000]==`0x8000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Journey To Madness/Purging the Corruption`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Journey To Madness/Purging the Corruption`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x8000]!=`0x8000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Journey to Madness/Purging the Corruption`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Journey to Madness/Purging the Corruption`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x10000]==`0x10000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Seed of Power`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Seed of Power`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x10000]!=`0x10000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Seed of Power`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Seed of Power`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x20000]==`0x20000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Foundry of Izexi`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Foundry of Izexi`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x20000]!=`0x20000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Foundry of Izexi`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Foundry of Izexi`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x40000]==`0x40000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Ninja Academy`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Ninja Academy`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x40000]!=`0x40000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Ninja Academy`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Ninja Academy`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x80000]==`0x80000`}
-		DO: DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Geraine's Hosts`]}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,getvar[completeQuests] + ` Geraine's Hosts`]}
+				DoExpr {setvar[completeCount,getvar[completeCount]+1]}
 	IF: Expr {hexstr[getquestktprogress[legendaryquestsb]&0x80000]!=`0x80000`}
-		DO: DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Geraine's Hosts`]}
+		DO: DoAll
+				DoExpr {setvar[incompleteQuests,getvar[incompleteQuests] + ` Geraine's Hosts`]}
+				DoExpr {setvar[incompleteCount,getvar[incompleteCount]+1]}
 	IF: Always
-		DO: SetState {PrintQuests}
+		DO: DoAll
+				DoExpr {setvar[completeQuests,`Completed Legendary Quests (` +getvar[completeCount]+ `):` + getvar[completeQuests]]}
+				DoExpr {setvar[incompleteQuests,`Incomplete Legendary Quests (` +getvar[incompleteCount]+ `):` + getvar[incompleteQuests]]}
+				SetState {PrintQuests}
 ~~ }
 STATE: {PrintQuests} ~~ {
 	IF: Always
@@ -237,6 +403,8 @@ STATE: {End} ~~ {
 		DO: DoAll
 				DoExpr {clearvar[completeQuests]}
 				DoExpr {clearvar[incompleteQuests]}
+				DoExpr {clearvar[completeCount]}
+				DoExpr {clearvar[incompleteCount]}
 	IF: All 
 			SecsInStateGE 15
 			Expr {testgvar[defaultMeta]==1}
