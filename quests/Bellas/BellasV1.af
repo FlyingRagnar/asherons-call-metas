@@ -90,7 +90,9 @@ STATE: {Begin} ~~ {
 STATE: {WaitingForInsatiableVault} ~~ {
 	IF: Not CellE 00960321
 		DO: DoExpr {echo[Waiting for manual transport to Insatiable Vault drop,15]}
-	IF: CellE 00960321
+	IF: All
+			CellE 00960321
+			Expr {isportaling[]==0}
 		DO: SetState {NavigatingToJawArea}
 ~~ }
 

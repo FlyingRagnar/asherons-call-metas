@@ -233,6 +233,7 @@ STATE: {TalkToTressar} ~~{
 	IF: Any
 			ChatMatch {Phalanx in the Direlands}
 			ChatMatch {killed 10 Phalanx}
+			ChatMatch {Phalanx you destroyed}
 		DO: SetState {TalkToAldreda}
 	IF: SecsInStateGE 5
 		DO: SetState {TalkToTressar}
@@ -242,6 +243,7 @@ STATE: {TalkToAldreda} ~~{
 		DO: Chat {/ub use Aldreda}
 	IF: Any
 			ChatMatch {strange devices the Gear Knights}
+			ChatMatch {drop that Unstable Mana Stone}
 		DO: DoAll
 				Chat {/ub myquests}
 				SetState {RefreshQuestsStart}
@@ -259,6 +261,8 @@ STATE: {GearknightRecall} ~~ {
 			SecsInStateGE 2
 			NavEmpty
 		DO: SetState {NavigatingToGearknightLoop}
+	IF: SecsInStateGE 15
+		DO: SetState {GearknightRecall}
 ~~ }
 STATE: {NavigatingToGearknightLoop} ~~ {
 	IF: Always
@@ -282,11 +286,15 @@ STATE: {CheckGearknightKillTask} ~~ {
 ~~ }
 STATE: {NavigatingToManaSiphon} ~~ {
 	IF: Always
-		DO: EmbedNav nav10 {ToManaSiphon.nav}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableCombat,`0`]}
+				EmbedNav nav10 {ToManaSiphon.nav}
 	IF: All
 			SecsInStateGE 3
 			NavEmpty
 		DO: SetState {GiveManaStoneToManaSiphon}
+	IF: Death
+		DO: SetState {GearknightRecall}
 ~~ }
 STATE: {GiveManaStoneToManaSiphon} ~~ {
 	IF: Always
@@ -331,6 +339,7 @@ STATE: {TalkToTressarFinish} ~~{
 		DO: Chat {/ub use Tressar}
 	IF: Any
 			ChatMatch {Tressar gives you}
+			ChatMatch {Phalanx you destroyed}
 		DO: SetState {TalkToAldredaFinish}
 	IF: SecsInStateGE 5
 		DO: SetState {TalkToTressarFinish}
@@ -542,9 +551,4 @@ NAV: nav10 once ~~ {
 	pnt -75.1099552154541 -10.3051329930623 0.703759702046712
 	pnt -75.1076697031657 -10.2694498697917 0.706733322143555
 	pnt -75.1062709490458 -10.2475818634033 0.70985418955485
-	pnt -75.0747873306274 -10.2448776563009 0.710203552246094
-	pnt -75.1236096382141 -10.2467975934347 0.710243097941081
-	pnt -75.0965527534485 -10.2473831494649 0.709819094340007
-	pnt -75.0957374254862 -10.2371804237366 0.708481089274089
-	pnt -75.0973103205363 -10.2079668045044 0.708481089274089
 ~~ }

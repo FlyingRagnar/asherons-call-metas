@@ -56,9 +56,7 @@ STATE: {Begin} ~~ {
 	IF: Always
 		DO: DoAll
 				DoExpr {echo[Rynthid Kill Task Flagging Meta by Sun Invictus,15]}	
-	IF: All
-			Not NeedToBuff
-			SecsInStateGE 2
+	IF: SecsInStateGE 2
 		DO: SetState {RynthidRecall}
 ~~ }
 STATE: {RynthidRecall} ~~ {

@@ -115,7 +115,7 @@ STATE: {DetermineNextAug} ~~ {
 		DO: SetState {InfusedWarCheck}
 	~~ Master of the Steel Circle for Specialized Melee Characters
 	IF: All
-			Expr {getcharintprop[302]!=1}
+			Expr {getcharintprop[300]!=1}
 			Any
 				Expr {getcharskill_traininglevel[41] == 3} ~~ 2H
 				Expr {getcharskill_traininglevel[44] == 3} ~~ Heavy
@@ -124,7 +124,7 @@ STATE: {DetermineNextAug} ~~ {
 		DO: SetState {MasterOfTheSteelCircleCheck}
 	~~ Master of the Five Fold Path for Specialized War/Void Characters
 	IF: All
-			Expr {getcharintprop[300]!=1}
+			Expr {getcharintprop[302]!=1}
 			Any
 				Expr {getcharskill_traininglevel[43] == 3} ~~ Void
 				Expr {getcharskill_traininglevel[34] == 3} ~~ War
@@ -166,10 +166,10 @@ STATE: {DetermineNextAug} ~~ {
 	
 	
 	~~ Master of the Steel Circle for Non-Specialized Melee Characters
-	IF: Expr {getcharintprop[302]!=1}
+	IF: Expr {getcharintprop[300]!=1}
 		DO: SetState {MasterOfTheSteelCircleCheck}
 	~~ Master of the Five Fold Path for Non-Specialized War/Void Characters
-	IF: Expr {getcharintprop[300]!=1}
+	IF: Expr {getcharintprop[302]!=1}
 		DO: SetState {MasterOfTheFiveFoldPathCheck}
 	~~ Master of the Focused Eye for Non-Specialized Missile Characters
 	IF: Expr {getcharintprop[301]!=1}
@@ -666,7 +666,7 @@ STATE: {NavigatingToNawamaraUjio} ~~ {
 	IF: All
 			SecsInStateGE 3
 			NavEmpty
-		DO: SetState {GiveAugGemToKilaf}
+		DO: SetState {GiveAugGemToNawamaraUjio}
 ~~ }
 STATE: {GiveAugGemToNawamaraUjio} ~~ {
 	IF: Always

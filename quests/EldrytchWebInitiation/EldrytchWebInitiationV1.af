@@ -222,6 +222,8 @@ STATE: {GrabManaShard} ~~ {
 		DO: Chat {/ub usel Corrupted Mana Shard}
 	IF: ItemCountGE 1 {Corrupted Mana Shard}
 		DO: CallState {CheckForTownNetworkDrop} {ReturnToArturus}
+	IF: SecsInStateGE 10
+		DO: SetState {GrabManaShard}
 ~~ }
 STATE: {ReturnToArturus} ~~ {
 	IF: Always

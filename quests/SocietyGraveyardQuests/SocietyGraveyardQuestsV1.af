@@ -273,6 +273,7 @@ STATE: {TalkToZumaq} ~~{
 	IF: Any
 			ChatMatch {What you can do for me}
 			ChatMatch {Come back to me when}
+			ChatMatch {If you wish to serve me again}
 		DO: SetState {CheckIfAdeptStart}
 	IF: SecsInStateGE 5
 		DO: SetState {TalkToZumaq}
@@ -281,7 +282,9 @@ STATE: {CheckIfAdeptStart} ~~ {
 	IF: Expr {getvar[srank]=='Adept'}
 		DO: SetState {TalkToAnnelina}
 	IF: Expr {getvar[srank]=='Initiate'} 
-		DO: SetState {GraveyardRecall}
+		DO: DoAll
+				Chat {/ub myquests}
+				SetState {GraveyardRecall}
 ~~ }
 STATE: {TalkToAnnelina} ~~{
 	IF: Always
@@ -331,11 +334,15 @@ STATE: {CheckArchivistKillTask} ~~ {
 ~~ }
 STATE: {NavigatingToStoneTunnel} ~~ {
 	IF: Always
-		DO: EmbedNav nav9 {BunkerExitToStoneTunnelBottom.nav}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableCombat,`0`]}
+				EmbedNav nav9 {BunkerExitToStoneTunnelBottom.nav}
 	IF: All
 			SecsInStateGE 3
 			NavEmpty
-		DO: CallState {RefreshQuests} {CheckWightSorcererKillTask}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableCombat,`1`]}
+				CallState {RefreshQuests} {CheckWightSorcererKillTask}
 ~~ }
 STATE: {StoneTunnelLap} ~~ {
 	IF: Always
@@ -432,7 +439,9 @@ STATE: {TalkToGarainFinish} ~~{
 STATE: {TalkToZumaqFinish} ~~{
 	IF: Always
 		DO: Chat {/ub use Zumaq al-Jaluzi}
-	IF: ChatMatch {Zumaq al-Jaluzi gives you}
+	IF: Any
+			ChatMatch {Zumaq al-Jaluzi gives you}
+			ChatMatch {If you wish to serve me again}
 		DO: SetState {CheckIfAdeptFinish}
 	IF: SecsInStateGE 5
 		DO: SetState {TalkToZumaqFinish}
@@ -560,6 +569,7 @@ NAV: nav8 once ~~ {
 	pnt -44.0005215009054 -65.390097173055 0.0129323144753774
 	pnt -44.002366956075 -65.4055005391439 0.0249562879403432
 	pnt -44.0008708318075 -65.4242150306702 0.0250208338101705
+	pnt -43.9106974919637 -65.5165009180705 0.0250208338101705
 ~~ }
 NAV: nav9 once ~~ {
 	pnt -44.0009338696798 -65.4245178222656 0.0250208338101705
