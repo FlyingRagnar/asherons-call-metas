@@ -49,10 +49,18 @@ STATE: {Default} ~~ {
 			Expr {getqueststatus[killtaskphyntoslarvaewait1109]!=0}
 			Expr {getqueststatus[killtaskphyntoskillerwait1109]!=0}
 			Expr {getqueststatus[killphyntosqueenpickup1109]!=0}
-		DO:	DoAll
-				DoExpr {echo[Assessing player to determine if they are in a society\.\.\.,15]}
-				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}  ~~ refresh player data
-				SetState {CheckPlayerSociety}			
+		DO:	CallState {AssessPlayer} {CheckPlayerSociety}			
+~~ }
+STATE: {AssessPlayer} ~~ {
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[`Assessing player to get current luminance value...`,15]}
+				DoExpr {setvar[assesstime,floor[getunixtime[]]]}
+				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}
+	IF: All
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+			Expr {wobjectlastidtime[wobjectgetplayer[]]>=getvar[assesstime]}
+		DO: Return
 ~~ }
 STATE: {CheckPlayerSociety} ~~ {
 	IF:	All
@@ -113,6 +121,7 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[AttackDistance,`0.02`]}
 				DoExpr {vtsetsetting[ApproachDistance,`0.0208333`]} ~~ 5	
 				DoExpr {setgvar[groupCounter,0]}
+				DoExpr {setgvar[fellowCounter,0]}
 				Chat {/vt loot load PhyntosQueen.utl}
 				SetState {Begin}				
 ~~ }
@@ -232,6 +241,7 @@ STATE: {TalkToHaruki} ~~{
 	IF: Always
 		DO: Chat {/ub use Haruki}
 	IF: Any
+			ChatMatch {killed 20 Phyntos Larvae}
 			ChatMatch {hyper aggressive Phyntos}
 		DO: SetState {TalkToJonathan}
 	IF: SecsInStateGE 5
@@ -281,9 +291,21 @@ STATE: {UseStatueOfTransport} ~~ {
 	IF: Always
 		DO: Chat {/ub usel Statue of Transport}
 	IF: CellE F7310124
-		DO: SetState {NavigatingToPhyntosHive}
+		DO: CallState {FellowshipRoleCall} {NavigatingToPhyntosHive}
 	IF: SecsInStateGE 5
 		DO: SetState {UseStatueOfTransport}
+~~ }
+STATE: {FellowshipRoleCall} ~~ {
+	IF: Expr {getfellowshipstatus[]==0}
+		DO: Return
+	IF: Expr {(getgvar[fellowCounter]%getfellowshipcount[])==listindexof[getfellownames[],wobjectgetname[wobjectgetplayer[]]]}
+		DO: DoAll
+				DoExpr {setgvar[fellowCounter,getgvar[fellowCounter]+1]}
+				SetState {WaitForFellowship}	
+~~ }
+STATE: {WaitForFellowship} ~~ {
+	IF: Expr {getgvar[fellowCounter]%getfellowshipcount[]==0}
+		DO: Return
 ~~ }
 STATE: {NavigatingToPhyntosHive} ~~ {
 	IF: Always
@@ -312,10 +334,12 @@ STATE: {LootPhyntosQueenAbdomen} ~~ {
 				Chat {/f I have my Phyntos Queen's Abdomen}
 				DoExpr {setgvar[groupCounter,getgvar[groupCounter]+1]}
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
-				SetState {WaitForGroupToHaveQueenAbdomen}
+				SetState {WaitForFellowToHaveQueenAbdomen}
 ~~ }
-STATE: {WaitForGroupToHaveQueenAbdomen} ~~ {
-	IF: Expr {getgvar[groupCounter]==getfellowshipcount[]}
+STATE: {WaitForFellowToHaveQueenAbdomen} ~~ {
+	IF: Any 
+			Expr {getfellowshipstatus[]==0}
+			Expr {getgvar[groupCounter]==getfellowshipcount[]}
 		DO: SetState {DetermineSocietyFinish}
 ~~ }
 STATE: {DetermineSocietyFinish} ~~ {

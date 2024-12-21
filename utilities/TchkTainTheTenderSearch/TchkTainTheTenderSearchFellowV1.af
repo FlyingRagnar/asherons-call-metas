@@ -86,14 +86,15 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[NavCloseStopRange,`0.00625`]} ~~ 1.5
 				DoExpr {vtsetsetting[NavPriorityBoost,`0`]}
 				DoExpr {vtsetsetting[EnableBuffing,`1`]}
-				DoExpr {vtsetsetting[EnableCombat,`1`]}
+				DoExpr {vtsetsetting[EnableCombat,`0`]}
 				DoExpr {vtsetsetting[EnableNav,`1`]}
-				DoExpr {vtsetsetting[IdlePeaceMode,`1`]}
+				DoExpr {vtsetsetting[IdlePeaceMode,`0`]}
 				DoExpr {vtsetsetting[EnableLooting,`1`]}
 				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
 				DoExpr {vtsetsetting[StopMacroOnDeath,`1`]}
 				DoExpr {uboptset[`VTank.FixPortalLoops`,True]}
 				DoExpr {vtsetsetting[UseDispelItems,`0`]}
+				DoExpr {setgvar[fellowCounter,0]}
 				Chat {/vt loot load TchkTainTheTender.utl}
 				SetState {Begin}				
 ~~ }
@@ -190,47 +191,15 @@ STATE: {AttemptSecondaryRecallToTownNetwork} ~~ {
 				DoExpr {echo[Could not get to Town Network via recalls\! Aborting,15]}
 				SetState {CouldNotReachTownNetwork}
 ~~ }
-STATE: {GroupUp} ~~ {
-	IF: ItemCountLE 0 {Egg}
-		DO: SetState {WaitingForLeader}
-	IF: ItemCountGE 1 {Egg}
-		DO: CallState {VerifyGroup} {UseFreebooterStatue}
-~~ }
-STATE: {GroupUpLandblock} ~~ {
-	IF: ItemCountLE 0 {Egg}
-		DO: SetState {WaitingForLeaderLandblock}
-	IF: ItemCountGE 1 {Egg}
-		DO: CallState {VerifyGroup} {WaitForLandblockReset}
-~~ }
-STATE: {WaitingForLeader} ~~ {
-	IF: ChatMatch {Fellowship present} ~~ this could be a more robust regex
-		DO: SetState {UseFreebooterStatue}
-~~ }
-STATE: {WaitingForLeaderLandblock} ~~ {
-	IF: ChatMatch {Fellowship present} ~~ this could be a more robust regex
-		DO: SetState {WaitForLandblockReset}
-~~ }
-STATE: {VerifyGroup} ~~ {
-~~ this is a subroutine state used by CallState
-	IF: Always
-		DO: DoExpr {setvar[closeChars,listmap[wobjectfindallbyobjectclass[24],`setvar[dt,coordinatedistancewithz[getplayercoordinates[],wobjectgetphysicscoordinates[$1]]];iif[getvar[dt]<5,wobjectgetstringprop[$1,1],0]`]]}
-	IF: All 
-			SecsInStateGE 2
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]==listcount[getfellownames[]]}
-		DO: Chat {/f Fellowship all detected, waiting to ensure all exit portalspace}
-	IF: All 
-			SecsInStateGE 20
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]==listcount[getfellownames[]]}
+STATE: {FellowshipRoleCall} ~~ {
+	IF: Expr {(getgvar[fellowCounter]%getfellowshipcount[])==listindexof[getfellownames[],wobjectgetname[wobjectgetplayer[]]]}
 		DO: DoAll
-				Chat {/f Fellowship present}
-				DoExpr {setgvar[deathFlag,`False`]}
-				Return
-	IF: All 
-			SecsInStateGE 2
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]!=listcount[getfellownames[]]} 
-		DO: Chat {/f Awaiting fellowship, pausing 15 seconds}
-	IF: SecsInStateGE 21
-		DO: SetState {VerifyGroup}
+				DoExpr {setgvar[fellowCounter,getgvar[fellowCounter]+1]}
+				SetState {WaitForFellowship}	
+~~ }
+STATE: {WaitForFellowship} ~~ {
+	IF: Expr {getgvar[fellowCounter]%getfellowshipcount[]==0}
+		DO: Return
 ~~ }
 STATE: {NavigatingToWebStronghold} ~~ {
 	IF: Always
@@ -238,7 +207,7 @@ STATE: {NavigatingToWebStronghold} ~~ {
 	IF:	All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {GroupUp}
+		DO: CallState {FellowshipRoleCall} {UseFreebooterStatue}
 ~~ }
 STATE: {NavigatingToWebStrongholdThenWait} ~~ {
 	IF: Always
@@ -246,7 +215,7 @@ STATE: {NavigatingToWebStrongholdThenWait} ~~ {
 	IF:	All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {GroupUpLandblock}
+		DO: CallState {FellowshipRoleCall} {WaitForLandblockReset}
 ~~ }
 STATE: {UseFreebooterStatue} ~~ {
 	IF: Always
@@ -279,58 +248,12 @@ STATE: {NavigatingToDayCheckSpot} ~~ {
 		DO: SetState {TchkTainCheck}
 ~~ }
 STATE: {TchkTainCheck} ~~ {
-	IF: Any 
-			Expr {listcount[wobjectfindalllandscapebynamerx[`Tchk'Tain the Tender`]]==1}
-			Expr {listcount[wobjectfindalllandscapebynamerx[`Corpse of Tchk'Tain the Tender`]]==1}
+	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`Tchk'Tain the Tender`]]==1}
 		DO: DoAll
 				Chat {/f Found Tchk'Tain}
-				SetState {LootTchkTain}
+				DoExpr {vtsetsetting[EnableCombat,`1`]}
 	IF: SecsInStateGE 5
 		DO: SetState {DetermineSocietyWait}
-~~ }
-STATE: {LootTchkTain} ~~ {
-	IF: Expr {wobjectfindnearestbynameandobjectclass[27,`Corpse of Tchk'Tain the Tender`]!=0}
-		DO: DoAll
-				DoExpr {setvar[corpse,wobjectfindnearestbynameandobjectclass[27,`Corpse of Tchk'Tain the Tender`]]}
-				CallState {FaceCorpse} {CheckForHead}
-~~ }
-STATE: {FaceCorpse} ~~ {
-	IF: Expr {wobjectisvalid[getvar[corpse]] == 1}
-		DO: ChatExpr {\/ub face +getheadingto[getvar[corpse]]}
-	IF: All
-			Expr {wobjectisvalid[getvar[corpse]] == 1}
-			SecsInStateGE 3
-		DO: SetState {CheckCorpseDistance}
-	IF: Expr {wobjectisvalid[getvar[corpse]] == 0}
-		DO: Return
-~~ }
-STATE: {CheckCorpseDistance} ~~ {
-	IF: Expr {wobjectisvalid[getvar[corpse]] == 1 && coordinatedistancewithz[getplayercoordinates[],wobjectgetphysicscoordinates[getvar[corpse]]] > 3}
-		DO: CallState {MoveTowardsCorpse} {CheckCorpseDistance}
-	IF: Expr {wobjectisvalid[getvar[corpse]] == 1 && coordinatedistancewithz[getplayercoordinates[],wobjectgetphysicscoordinates[getvar[corpse]]] < 3}
-		DO: DoAll
-				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]}
-				Return
-	IF: Expr {wobjectisvalid[getvar[corpse]] == 0}
-		DO: Return
-~~ }
-STATE: {MoveTowardsCorpse} ~~ {
-	IF: Always
-		DO: DoAll
-				DoExpr {setmotion[Forward,1];delayexec[200,`setmotion[Forward,0]`]}
-				Return
-~~ }
-STATE: {CheckForHead} ~~ {
-	IF: ItemCountGE 1 {Tchk'Tain the Tender's Severed Head}
-		DO: DoAll
-				Chat {/f I have Tchk'Tain's head.}
-				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
-				Chat {/vt loot load DefaultLoot.utl}
-				SetState {DetermineSocietyWait}
-	IF: Expr {wobjectisvalid[getvar[corpse]] == 0} ~~ something went wrong, corpse is gone
-		DO: DoAll
-				DoExpr {vtsetsetting[LootOnlyRareCorpses,`1`]}
-				SetState {DetermineSocietyWait}
 ~~ }
 
 

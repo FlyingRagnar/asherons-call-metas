@@ -62,7 +62,7 @@ STATE: {Settings} ~~ {
 				DoExpr {clearvar[targetCurrencyCount]}
 				DoExpr {clearvar[targetCurrencyName]}
 				DoExpr {clearvar[promNotesNeeded]}
-				DoExpr {clearvar[totalNeeded]}
+				DoExpr {clearvar[targetCurrencyNeeded]}
 	IF: SecsInStateGE 3
 		DO: SetState {Begin}				
 ~~ }
@@ -124,40 +124,47 @@ STATE: {DetermineNeededAmount} ~~ {
 	IF: Always
 		DO: DoAll
 				~~ round up number needed to nearest 10s digit so we only buy boxes of 10
-				DoExpr {setvar[totalNeeded,ceiling[((1000-$targetCurrencyCount)/10)]*10]}
+				DoExpr {setvar[targetCurrencyNeeded,ceiling[((1000-$targetCurrencyCount)/10)]*10]}
+				DoExpr {echo[`I have ` +$targetCurrencyCount+ ` ` +$targetCurrencyName+ ` and need 1000`,15]}
 				~~ total needed of alt currency times prom note cost for 1
-				DoExpr {setvar[promNotesNeeded,$totalNeeded*$multiplier]} 
+				DoExpr {setvar[promNotesNeeded,$targetCurrencyNeeded*$multiplier]}
+				DoExpr {echo[`I need ` +$promNotesNeeded+ ` Promissory Notes in order to exchange for the remainder`,15]}
 				SetState {CheckPromNotes}
 ~~ }
 STATE: {CheckPromNotes} ~~ {
 	IF: Expr {$promNotes>=$promNotesNeeded}
 		DO: DoAll
 				DoExpr {setvar[promNotesOnly,`True`]}
-				DoExpr {echo[`I have enough to exchange (` +$promNotesNeeded+ ` Promissory Notes)`,15]}
+				DoExpr {echo[`I have ` +$promNotes+ ` Promissory Notes and can perform the exchange`,15]}
 				CallState {CheckForTNDrop} {NavigatingToHigashiyama}
 	IF: All
 			Expr {$promNotes < $promNotesNeeded}
-			Expr {$targetCurrencyName != `Colosseum Coins`}
+			Expr {$targetCurrencyName!=`Colosseum Coins`}
 		DO: DoAll
 				DoExpr {setvar[coloCoinsNeeded,ceiling[($promNotesNeeded-$promNotes)/5]]} ~~ 5 prom notes per colo coin
+				DoExpr {echo[`I have ` +$promNotes+ ` Promissory Notes and need ` +$coloCoinsNeeded+ ` to exchange for prom notes`,15]}
 				SetState {CheckColoCoins}
 	IF: All
 			Expr {$promNotes < $promNotesNeeded}
-			Expr {$targetCurrencyName == `Colosseum Coins`}
+			Expr {$targetCurrencyName==`Colosseum Coins`}
 		DO: DoAll
-				DoExpr {echo[`I need ` +$totalNeeded+ ` more ` +$targetCurrencyName+ ` or ` +$promNotesNeeded+ ` more Promissory Notes in order to purchase/exchange for 1000 ` +$targetCurrencyName,15]}
+				DoExpr {echo[`I have only ` +$promNotes+ ` Promissory Notes`,15]}
 				SetState {End}
 ~~ }
 STATE: {CheckColoCoins} ~~ {
 	IF: Expr {$coloCoins>=$coloCoinsNeeded}
 		DO: DoAll
 				DoExpr {setvar[promNotesOnly,`False`]}
-				DoExpr {echo[`I have enough to exchange (` +$coloCoinsNeeded+ ` Colosseum Coins, ` +$promNotes+ ` Promissory Notes)`,15]}
+				DoExpr {echo[`I have ` +$coloCoins+ ` Colosseum Coins and can do the exchange`,15]}
 				CallState {CheckForTNDrop} {NavigatingToHigashiyama}
 	IF: Expr {$coloCoins<$coloCoinsNeeded}
 		DO: DoAll
-				DoExpr {setvar[promNotesDiff,$promNotesNeeded-$promNotes-($coloCoins*5)]}
-				DoExpr {echo[`I need ` +$promNotesDiff+ ` more Promissory Notes or ` +($coloCoinsNeeded-$coloCoins)+ ` more Colosseum Coins in order to purchase/exchange for 1000 ` +$targetCurrencyName,15]}
+				DoExpr {setvar[promNotesFromColoCoins,$coloCoins*5]}
+				DoExpr {setvar[promNotesSubtotal,$promNotes+$promNotesFromColoCoins]}
+				DoExpr {setvar[promNotesDiff,$promNotesNeeded-$promNotesSubtotal]}
+				DoExpr {echo[`I have only ` +$coloCoins)+ ` Colosseum Coins`,15]}
+				DoExpr {echo[`I could exchange for an additional ` +$promNotesFromColoCoins+ ` prom notes, for a total of ` +$promNotesSubtotal+,15]}
+				DoExpr {echo[`But I would be ` +$promNotesDiff+ ` prom notes short of the needed ` +$promNotesNeeded+,15]}
 				SetState {End}
 ~~ }
 STATE: {CheckForTNDrop} ~~ {
@@ -300,7 +307,9 @@ STATE: {AllPromExchangeColoCoins} ~~ {
 				SetState {AllPromExchangeColoCoins}
 ~~ }
 STATE: {End} ~~ {
-	IF: Expr {testgvar[defaultMeta]==1}
+	IF: All
+			SecsInStateGE 30
+			Expr {testgvar[defaultMeta]==1}
 		DO: ChatExpr {\/vt meta load +getgvar[defaultMeta]}
 ~~ }
 

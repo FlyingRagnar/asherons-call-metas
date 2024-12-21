@@ -40,15 +40,15 @@
 STATE: {Default} ~~ {
 	IF: Not Expr {getcharskill_traininglevel[39] >= 2} ~~ Cooking trained/specialized
 		DO: DoAll
-				DoExpr {echo[Cooking not trained or specialized\!,15]}
+				DoExpr {echo[`Cooking not trained or specialized!`,15]}
 				SetState {End}
 	IF: ItemCountLE 0 {Brew Kettle}
 		DO: DoAll
-				DoExpr {echo[No Brew Kettle found, cannot make beer\!,15]}
+				DoExpr {echo[`No Brew Kettle found, cannot make beer!`,15]}
 				SetState {End}
 	IF: ItemCountLE 0 {Baking Pan}
 		DO: DoAll
-				DoExpr {echo[No Baking Pan found, cannot make beer\!,15]}
+				DoExpr {echo[`No Baking Pan found, cannot make beer!`,15]}
 				SetState {End}
 	IF: SecsInStateGE 2
 		DO: SetState {Settings}
@@ -80,7 +80,7 @@ STATE: {Begin} ~~ {
 				DoExpr {echo[If ingredients needed\, goes shopping to Grocer Jaffres Din in Sanamar and Shopkeeper in Westwatch,15]}
 				DoExpr {echo[Shopping is manual unless you have vendor profiles setup for these NPCs,15]}
 	IF: SecsInStateGE 5
-		DO: CallState {CheckForTownNetworkDrop} {NavigatingToJaffres}
+		DO: SetState {CheckIfHaveBeerIngredients}
 ~~ }
 STATE: {CheckIfHaveBeerIngredients} ~~ {
 	IF: Any
@@ -117,11 +117,11 @@ STATE: {CheckIfHaveBeerIngredients} ~~ {
 				ItemCountGE 1 {Empty Stopped Keg}
 				ItemCountGE 1 {Empty Bottles}
 		DO: DoAll
-				DoExpr {echo[Have ingredients to make some beers\, skipping shopping,15]}
+				DoExpr {echo[`Have ingredients to make some beers, skipping shopping`,15]}
 				SetState {MakeBeers}
 	IF: SecsInStateGE 3
 		DO: DoAll
-				DoExpr {echo[Do not have ingredients to make beers\, going shopping,15]}
+				DoExpr {echo[`Do not have ingredients to make beers, going shopping`,15]}
 				CallState {CheckForTownNetworkDrop} {NavigatingToJaffres}
 ~~ }
 STATE: {CheckForTownNetworkDrop} ~~ {
@@ -803,8 +803,10 @@ STATE: {MakeBottlesOfDukeRaoulsDistillation} ~~ {
 		DO: SetState {MakeBottlesOfDukeRaoulsDistillation}
 ~~ }
 STATE: {End} ~~ {
-	IF:	Always 
-		DO:	None	
+	IF: All 
+			SecsInStateGE 5
+			Expr {testgvar[defaultMeta]==1}
+		DO: ChatExpr {\/vt meta load +getgvar[defaultMeta]}	
 ~~ }
 
 ~~========================= ONLY NAVS APPEAR BELOW THIS LINE =========================~~

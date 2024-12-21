@@ -79,7 +79,7 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[Recharge-Norm-Hitp,`70`]}
 				DoExpr {vtsetsetting[Recharge-Norm-Stam,`5`]}
 				DoExpr {vtsetsetting[Recharge-Norm-Mana,`15`]}
-				DoExpr {vtsetsetting[Recharge-Notarg-Hitp,`100`]}
+				DoExpr {vtsetsetting[Recharge-Notarg-Hitp,`50`]}
 				DoExpr {vtsetsetting[Recharge-Notarg-Stam,`0`]}
 				DoExpr {vtsetsetting[Recharge-Notarg-Mana,`50`]}
 				DoExpr {vtsetsetting[OpenDoors,`1`]}

@@ -18,7 +18,6 @@ Video:
 Info:
 - Expects Monster tab of Virindi Tank to be configured for quest mobs
 - Auto loots legendary chest at the end using currently loaded loot profile
-- Uses /ub bc, which can impact multiple fellows/groups if running an army
 - Does not collect optional "book" item in dungeon for additional luminance
 
 How this meta can get stuck/broken:

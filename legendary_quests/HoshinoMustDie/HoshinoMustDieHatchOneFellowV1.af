@@ -200,7 +200,6 @@ STATE: {WaitingForLeaderLordBrem} ~~ {
 		DO: SetState {NavigatingToHatchOne}
 ~~ }
 STATE: {VerifyGroupFast} ~~ {
-~~ this is a subroutine state used by CallState
 	IF: Always
 		DO: DoExpr {setvar[closeChars,listmap[wobjectfindallbyobjectclass[24],`setvar[dt,coordinatedistancewithz[getplayercoordinates[],wobjectgetphysicscoordinates[$1]]];iif[getvar[dt]<5,wobjectgetstringprop[$1,1],0]`]]}
 	IF: All 
@@ -209,11 +208,7 @@ STATE: {VerifyGroupFast} ~~ {
 		DO: DoAll
 				Chat {/f Fellowship present}
 				Return
-	IF: All 
-			SecsInStateGE 2
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]!=listcount[getfellownames[]]} 
-		DO: Chat {/f Awaiting fellowship, pausing 15 seconds}
-	IF: SecsInStateGE 17
+	IF: SecsInStateGE 4
 		DO: SetState {VerifyGroupFast}
 ~~ }
 STATE: {NavigatingToHatchOne} ~~ {
@@ -224,27 +219,21 @@ STATE: {NavigatingToHatchOne} ~~ {
 	IF:	All
 			NavEmpty
 			SecsInStateGE 3
-		DO:	SetState {ClearOutsideHatchOne}
-~~ }
-STATE: {ClearOutsideHatchOne} ~~ {
-	IF: SecsInStateGE 30
-		DO: SetState {UseHatchOne}
+		DO:	SetState {UseHatchOne}
 ~~ }
 STATE: {UseHatchOne} ~~ {
 	IF: Always
 		DO: Chat {/ub usel Mysterious Hatch}
-	IF: SecsInStateGE 10
+	IF: SecsInStateGE 7
 		DO: SetState {UseHatchOne}
 	IF: IntoPortal
-		DO: DoAll
-				DoExpr {vtsetsetting[LootOnlyRareCorpses,`0`]}
-				SetState {GroupUpHatchOne}
+		DO: SetState {GroupUpHatchOne}
 ~~ }
 STATE: {GroupUpHatchOne} ~~ {
 	IF: ItemCountLE 0 {Egg}
 		DO: SetState {WaitingForLeaderHatchOne}
 	IF: ItemCountGE 1 {Egg}
-		DO: CallState {VerifyGroupFast} {NavigatingToAnnoyingDoor}
+		DO: CallState {VerifyGroup} {NavigatingToAnnoyingDoor}
 ~~ }
 STATE: {WaitingForLeaderHatchOne} ~~ {
 	IF: ChatMatch {Fellowship present} ~~ this could be a more robust regex
@@ -254,13 +243,8 @@ STATE: {WaitingForLeaderHatchOne} ~~ {
 				SetState {FollowingLeader}
 ~~ }
 STATE: {VerifyGroup} ~~ {
-~~ this is a subroutine state used by CallState
 	IF: Always
 		DO: DoExpr {setvar[closeChars,listmap[wobjectfindallbyobjectclass[24],`setvar[dt,coordinatedistancewithz[getplayercoordinates[],wobjectgetphysicscoordinates[$1]]];iif[getvar[dt]<5,wobjectgetstringprop[$1,1],0]`]]}
-	IF: All 
-			SecsInStateGE 2
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]==listcount[getfellownames[]]}
-		DO: Chat {/f Fellowship all detected, waiting to ensure all exit portalspace}
 	IF: All 
 			SecsInStateGE 20
 			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]==listcount[getfellownames[]]}
@@ -268,10 +252,8 @@ STATE: {VerifyGroup} ~~ {
 				Chat {/f Fellowship present}
 				Return
 	IF: All 
-			SecsInStateGE 2
+			SecsInStateGE 4
 			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]!=listcount[getfellownames[]]} 
-		DO: Chat {/f Awaiting fellowship, pausing 15 seconds}
-	IF: SecsInStateGE 21
 		DO: SetState {VerifyGroup}
 ~~ }	
 STATE: {NavigatingToAnnoyingDoor} ~~ {
@@ -280,27 +262,49 @@ STATE: {NavigatingToAnnoyingDoor} ~~ {
 	IF: All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {NavigatingToAnnoyingDoorButton}
+		DO: Chat {/ub bc /ub mexec vtsetmetastate[SplitRolesAtAnnoyingDoor]}
+~~ }
+STATE: {SplitRolesAtAnnoyingDoor} ~~ {
+	~~ leader runs and pushes button
+	IF: ItemCountGE 1 {Egg}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableCombat,`0`]}
+				DoExpr {vtsetsetting[IdlePeaceMode,`1`]}
+				SetState {NavigatingToAnnoyingDoorButton}
+	IF: ItemCountLE 0 {Egg}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableNav,`0`]}
+				SetState {WaitForAnnoyingDoorToOpen}
+~~ }
+STATE: {WaitForAnnoyingDoorToOpen} ~~ {
+	IF: Expr {wobjectgetisdooropen[wobjectfindnearestdoor[]]==1} ~~ door is open
+		DO: SetState {AttemptToBugAnnoyingDoor}
+~~ }
+STATE: {AttemptToBugAnnoyingDoor} ~~ {
+	IF: Always
+		DO: DoAll
+				EmbedNav nav13 {BugAnnoyingDoor.nav}
+				DoExpr {vtsetsetting[EnableNav,`1`]}
+				DoExpr {vtsetsetting[EnableCombat,`0`]} ~~ don't fight and get pulled away from bugged door?
 ~~ }
 STATE: {NavigatingToAnnoyingDoorButton} ~~ {
 	IF: Always
-		DO: DoAll
-				Chat {/ub bc /vt opt set enablecombat false}
-				EmbedNav nav9 {HatchOneToAnnoyingDoorButton.nav}
+		DO: EmbedNav nav9 {HatchOneToAnnoyingDoorButton.nav}
 	IF:	All
 			NavEmpty
 			SecsInStateGE 3
-		DO:	SetState {NavigatingToOutsideDaimyoRoom}
+		DO:	Chat {/ub bc /ub mexec vtsetmetastate[NavigatingToOutsideDaimyoRoom]}
 ~~ }
+~~ whole fellow does this state together again
 STATE: {NavigatingToOutsideDaimyoRoom} ~~ {
 	IF: Always
-		DO: DoAll
-				Chat {/ub bc /vt opt set enablecombat true}
-				EmbedNav nav10 {HatchOneToOutsideDaimyoRoom.nav}
+		DO: EmbedNav nav10 {HatchOneToOutsideDaimyoRoom.nav}
 	IF:	All
 			NavEmpty
 			SecsInStateGE 3
-		DO:	SetState {PauseBeforeDaimyoRoom}
+		DO:	DoAll
+				DoExpr {vtsetsetting[EnableCombat,`1`]}
+				SetState {PauseBeforeDaimyoRoom}
 ~~ }
 STATE: {PauseBeforeDaimyoRoom} ~~ {
 	IF: SecsInStateGE 30
@@ -312,11 +316,13 @@ STATE: {NavigatingToDaimyoRoom} ~~ {
 	IF: All
 			NavEmpty
 			SecsInStateGE 3
-		DO: Chat {/ub bc /ub mexec vtsetmetastate[UseDaimyoGateway]}
+		DO: SetState {UseDaimyoGateway}
 ~~ }
 STATE: {UseDaimyoGateway} ~~ {
 	IF:	Expr {listcount[wobjectfindalllandscapebynamerx[`Gateway`]]==1}
-		DO:	Chat {/ub usel Gateway}
+		DO:	DoAll
+				DoExpr {vtsetsetting[EnableCombat,`0`]}
+				Chat {/ub usel Gateway}
 	IF: SecsInStateGE 20
 		DO: SetState {UseDaimyoGateway}
 	IF: IntoPortal
@@ -324,12 +330,17 @@ STATE: {UseDaimyoGateway} ~~ {
 ~~ }
 STATE: {UseMnemosyne} ~~ {
 	IF: Always
-		DO: Chat {/ub usel Enchanted Mnemosyne}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableNav,`0`]}
+				Chat {/ub usel Enchanted Mnemosyne}
 	IF:	SecsInStateGE 20
 		DO:	SetState {UseMnemosyne}
 	IF: Any
 			ChatMatch {As you touch the Enchanted Mnemosyne, the spell placed on you}
-		DO: SetState {PortalRecall}
+			ChatMatch {You have already gained all you can from this mnemosyne}
+		DO: DoAll
+				DoExpr {vtsetsetting[EnableCombat,`1`]}
+				SetState {PortalRecall}
 ~~ }
 STATE: {PortalRecall} ~~ {
 	IF: Always
@@ -670,9 +681,9 @@ NAV: nav9 once ~~ {
 	pnt -20.9321880658468 -41.4830999692281 -0.0999791701634725
 	pnt -20.8891901175181 -41.4851436297099 -0.0999791701634725
 	pnt -20.8653670946757 -41.4847794532776 -0.0999791701634725
+	pnt -20.8419143676758 -41.4837789217631 -0.0999791701634725
 ~~ }
 NAV: nav10 once ~~ {
-	pnt -20.8419143676758 -41.4837789217631 -0.0999791701634725
 	pnt -20.8155254046122 -41.4837293942769 -0.0999791701634725
 	pnt -20.8155158996582 -41.4466160774231 -0.0999791701634725
 	pnt -20.815574836731 -41.4124237855275 -0.0999791701634725
@@ -694,6 +705,12 @@ NAV: nav11 once ~~ {
 ~~ }
 NAV: nav12 once ~~ {
 	rcl 56.819834168752 33.5814291636149 0.175020837783813 {Portal Recall}
+~~ }
+NAV: nav13 once ~~ {
+	pnt -20.85869251887 -41.4924540837606 -0.0999791701634725
+	pnt -20.8590543111165 -41.4740822792053 -0.0999791701634725
+	pnt -20.859298547109 -41.4925485610962 -0.0999791701634725
+	pnt -20.8592450459798 -41.4836192448934 -0.0999791701634725
 ~~ }
 
 

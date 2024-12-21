@@ -39,7 +39,7 @@
 
 STATE: {Default} ~~ {
 	IF:	Always
-		DO: CallState {AssessPlayer} {CheckIfMaster}			
+		DO: CallState {AssessPlayer} {CheckPlayerSociety}			
 ~~ }
 STATE: {AssessPlayer} ~~ {
 	IF: Always
@@ -52,17 +52,80 @@ STATE: {AssessPlayer} ~~ {
 			Expr {wobjectlastidtime[wobjectgetplayer[]]>=getvar[assesstime]}
 		DO: Return
 ~~ }
-STATE: {CheckIfMaster} ~~ {
+STATE: {CheckPlayerSociety} ~~ {
 	IF:	All
-			Expr {wobjectgetintprop[wobjectgetplayer[],288] != 1001} ~~ 288 is web, 1001 is master
-			SecsInStateGE 10
+			Expr {wobjectgetintprop[wobjectgetplayer[],287]==1001} ~~ 287 is hand
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
 		DO: DoAll
-				DoExpr {echo[Player is not Master rank in Eldytch Web\! Falling back to WebRestock,15]}
-				Chat {/vt meta load WebRestock}
-	IF: All 
-			Expr {wobjectgetintprop[wobjectgetplayer[],288] == 1001}
-			SecsInStateGE 10
-		DO:	SetState {Settings}			
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Celestial Hand`,15]}
+				DoExpr {setvar[psociety,'Hand']}
+				DoExpr {setvar[srank,'Master']}
+				SetState {Settings}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],288]==1001} ~~ 288 is web
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Eldrytch Web`,15]}
+				DoExpr {setvar[psociety,'Web']}
+				DoExpr {setvar[srank,'Master']}
+				SetState {Settings}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],289]==1001} ~~ 289 is blood
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Radiant Blood`,15]}
+				DoExpr {setvar[psociety,'Blood']}
+				DoExpr {setvar[srank,'Master']}
+				SetState {Settings}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],287]>296} ~~ 287 is hand
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Celestial Hand`,15]}
+				DoExpr {setvar[psociety,'Hand']}
+				DoExpr {setvar[srank,'Knight']}
+				SetState {Settings}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],288]>296} ~~ 288 is web
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Eldrytch Web`,15]}
+				DoExpr {setvar[psociety,'Web']}
+				DoExpr {setvar[srank,'Knight']}
+				SetState {Settings}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],289]>296} ~~ 289 is blood
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Radiant Blood`,15]}
+				DoExpr {setvar[psociety,'Blood']}
+				DoExpr {setvar[srank,'Knight']}
+				SetState {Settings}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],287]>0} ~~ 287 is hand
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Celestial Hand`,15]}
+				DoExpr {echo[`Player is not Knight rank or above in Celestial Hand!`,15]}
+				SetState {End}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],288]>0} ~~ 288 is web
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Eldrytch Web`,15]}
+				DoExpr {echo[`Player is not Knight rank or above in Eldrytch Web!`,15]}
+				SetState {End}
+	IF:	All
+			Expr {wobjectgetintprop[wobjectgetplayer[],289]>0} ~~ 289 is blood
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+		DO: DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is in Radiant Blood`,15]}
+				DoExpr {echo[`Player is not Knight rank or above in Radiant Blood!`,15]}
+				SetState {End}
+	IF: SecsInStateGE 10
+		DO:	DoAll
+				DoExpr {echo[wobjectgetname[wobjectgetplayer[]]+` is not in a society!`,15]}
+				SetState {End}			
 ~~ }
 STATE: {Settings} ~~ {
 	IF:	Always
@@ -222,10 +285,6 @@ NAV: nav4 once ~~ {
 
 NAV: nav5 once ~~ {
 	rcl -101.657922903697 -96.6921284039815 2.08333134651184E-05 {Secondary Portal Recall}
-~~ }
-
-NAV: nav6 once ~~ {
-	rcl 56.8844753265381 33.6273729642232 0.175020837783813 {Lifestone Recall}
 ~~ }
 
 NAV: nav7 once ~~ {

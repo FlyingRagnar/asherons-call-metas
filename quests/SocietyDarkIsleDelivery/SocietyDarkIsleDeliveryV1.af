@@ -43,10 +43,18 @@ STATE: {Default} ~~ {
 				DoExpr {echo[Dark Isle Delivery timer not up\!,15]}
 				SetState {End}
 	IF:	Expr {getqueststatus[taskdiddeliverywait]!=0}
-		DO:	DoAll
-				DoExpr {echo[Assessing player to determine if they are in a society\.\.\.,15]}
-				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}  ~~ refresh player data
-				SetState {CheckPlayerSociety}			
+		DO:	CallState {AssessPlayer} {CheckPlayerSociety}			
+~~ }
+STATE: {AssessPlayer} ~~ {
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[`Assessing player...`,15]}
+				DoExpr {setvar[assesstime,floor[getunixtime[]]]}
+				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}
+	IF: All
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+			Expr {wobjectlastidtime[wobjectgetplayer[]]>=getvar[assesstime]}
+		DO: Return
 ~~ }
 STATE: {CheckPlayerSociety} ~~ {
 	IF:	All

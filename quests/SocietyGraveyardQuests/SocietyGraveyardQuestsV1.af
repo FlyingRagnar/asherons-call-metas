@@ -39,10 +39,18 @@
 
 STATE: {Default} ~~ {
 	IF: Always
+		DO: CallState {AssessPlayer} {CheckPlayerSociety}			
+~~ }
+STATE: {AssessPlayer} ~~ {
+	IF: Always
 		DO: DoAll
-				DoExpr {echo[Assessing player to determine if they are in a society\.\.\.,15]}
-				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}  ~~ refresh player data
-				SetState {CheckPlayerSociety}			
+				DoExpr {echo[`Assessing player...`,15]}
+				DoExpr {setvar[assesstime,floor[getunixtime[]]]}
+				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}
+	IF: All
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+			Expr {wobjectlastidtime[wobjectgetplayer[]]>=getvar[assesstime]}
+		DO: Return
 ~~ }
 STATE: {CheckPlayerSociety} ~~ {
 	IF:	All
@@ -147,6 +155,7 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[PetCustomRange,`0.0625`]} ~~ 15
 				DoExpr {vtsetsetting[AttackDistance,`0.0125`]} ~~ 3
 				DoExpr {vtsetsetting[ApproachDistance,`0.0208333`]} ~~ 5	
+				DoExpr {setgvar[fellowCounter,0]}
 				SetState {Begin}				
 ~~ }
 STATE: {Begin} ~~ {
@@ -314,7 +323,19 @@ STATE: {GraveyardRecall} ~~ {
 	IF: All
 			SecsInStateGE 2
 			NavEmpty
-		DO: SetState {NavigatingToShamblingArchivist}
+		DO: CallState {FellowshipRoleCall} {NavigatingToShamblingArchivist}
+~~ }
+STATE: {FellowshipRoleCall} ~~ {
+	IF: Expr {getfellowshipstatus[]==0}
+		DO: Return
+	IF: Expr {(getgvar[fellowCounter]%getfellowshipcount[])==listindexof[getfellownames[],wobjectgetname[wobjectgetplayer[]]]}
+		DO: DoAll
+				DoExpr {setgvar[fellowCounter,getgvar[fellowCounter]+1]}
+				SetState {WaitForFellowship}	
+~~ }
+STATE: {WaitForFellowship} ~~ {
+	IF: Expr {getgvar[fellowCounter]%getfellowshipcount[]==0}
+		DO: Return
 ~~ }
 STATE: {NavigatingToShamblingArchivist} ~~ {
 	IF: Always
@@ -328,15 +349,15 @@ STATE: {CheckArchivistKillTask} ~~ {
 	IF: All 
 			Expr {getquestktprogress[taskgrave1bosskillstarted]==getquestktrequired[taskgrave1bosskillstarted]}
 			NavEmpty
-		DO: SetState {NavigatingToStoneTunnel}
+		DO: CallState {FellowshipRoleCall} {NavigatingToStoneTunnel}
 	IF: SecsInStateGE 30
 		DO: CallState {RefreshQuests} {CheckArchivistKillTask}
 ~~ }
 STATE: {NavigatingToStoneTunnel} ~~ {
+	IF: Expr {getfellowshipstatus[]==0}
+		DO: DoExpr {vtsetsetting[EnableCombat,`0`]}
 	IF: Always
-		DO: DoAll
-				DoExpr {vtsetsetting[EnableCombat,`0`]}
-				EmbedNav nav9 {BunkerExitToStoneTunnelBottom.nav}
+		DO: EmbedNav nav9 {BunkerExitToStoneTunnelBottom.nav}
 	IF: All
 			SecsInStateGE 3
 			NavEmpty
@@ -354,7 +375,7 @@ STATE: {StoneTunnelLap} ~~ {
 ~~ }
 STATE: {CheckWightSorcererKillTask} ~~ {
 	IF: Expr {getquestktprogress[taskgrave1wightmagekilltask]==getquestktrequired[taskgrave1wightmagekilltask]}  
-		DO: SetState {CheckIfAdeptMid}
+		DO: CallState {FellowshipRoleCall} {CheckIfAdeptMid}
 	IF: Expr {getquestktprogress[taskgrave1wightmagekilltask]!=getquestktrequired[taskgrave1wightmagekilltask]}  
 		DO: SetState {StoneTunnelLap}
 ~~ }

@@ -47,10 +47,18 @@ STATE: {Default} ~~ {
 	IF:	Any ~~ proceed with quests even if only 1 needs doing
 			Expr {getqueststatus[gearknightinvasionphalanxkillwait_0513]!=0}
 			Expr {getqueststatus[gearknightinvasionhighsiphonwait_1009]!=0}
-		DO:	DoAll
-				DoExpr {echo[Assessing player to determine if they are in a society\.\.\.,15]}
-				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}  ~~ refresh player data
-				SetState {CheckPlayerSociety}			
+		DO:	CallState {AssessPlayer} {CheckPlayerSociety}			
+~~ }
+STATE: {AssessPlayer} ~~ {
+	IF: Always
+		DO: DoAll
+				DoExpr {echo[`Assessing player...`,15]}
+				DoExpr {setvar[assesstime,floor[getunixtime[]]]}
+				DoExpr {wobjectrequestdata[wobjectgetplayer[]]}
+	IF: All
+			Expr {wobjecthasdata[wobjectgetplayer[]]==1}
+			Expr {wobjectlastidtime[wobjectgetplayer[]]>=getvar[assesstime]}
+		DO: Return
 ~~ }
 STATE: {CheckPlayerSociety} ~~ {
 	IF:	All
@@ -113,6 +121,7 @@ STATE: {Settings} ~~ {
 				DoExpr {vtsetsetting[PetCustomRange,`0.0625`]} ~~ 15
 				DoExpr {vtsetsetting[AttackDistance,`0.025`]} ~~ 6
 				DoExpr {vtsetsetting[ApproachDistance,`0.0208333`]} ~~ 5	
+				DoExpr {setgvar[fellowCounter,0]}
 				SetState {Begin}				
 ~~ }
 STATE: {Begin} ~~ {
@@ -260,9 +269,21 @@ STATE: {GearknightRecall} ~~ {
 	IF: All
 			SecsInStateGE 2
 			NavEmpty
-		DO: SetState {NavigatingToGearknightLoop}
+		DO: CallState {FellowshipRoleCall} {NavigatingToGearknightLoop}
 	IF: SecsInStateGE 15
 		DO: SetState {GearknightRecall}
+~~ }
+STATE: {FellowshipRoleCall} ~~ {
+	IF: Expr {getfellowshipstatus[]==0}
+		DO: Return
+	IF: Expr {(getgvar[fellowCounter]%getfellowshipcount[])==listindexof[getfellownames[],wobjectgetname[wobjectgetplayer[]]]}
+		DO: DoAll
+				DoExpr {setgvar[fellowCounter,getgvar[fellowCounter]+1]}
+				SetState {WaitForFellowship}	
+~~ }
+STATE: {WaitForFellowship} ~~ {
+	IF: Expr {getgvar[fellowCounter]%getfellowshipcount[]==0}
+		DO: Return
 ~~ }
 STATE: {NavigatingToGearknightLoop} ~~ {
 	IF: Always
@@ -273,6 +294,8 @@ STATE: {NavigatingToGearknightLoop} ~~ {
 		DO: DoAll
 				EmbedNav nav9 {GearknightLoop.nav}
 				SetState {CheckGearknightKillTask}
+	IF: Death
+		DO: SetState {GearknightRecallDeath}
 ~~ }
 STATE: {CheckGearknightKillTask} ~~ {
 	IF: NavEmpty
@@ -283,6 +306,8 @@ STATE: {CheckGearknightKillTask} ~~ {
 		DO: SetState {NavigatingToManaSiphon}
 	IF: SecsInStateGE 60
 		DO: CallState {RefreshQuests} {CheckGearknightKillTask}
+	IF: Death
+		DO: SetState {GearknightRecallDeath}
 ~~ }
 STATE: {NavigatingToManaSiphon} ~~ {
 	IF: Always
@@ -294,7 +319,7 @@ STATE: {NavigatingToManaSiphon} ~~ {
 			NavEmpty
 		DO: SetState {GiveManaStoneToManaSiphon}
 	IF: Death
-		DO: SetState {GearknightRecall}
+		DO: SetState {GearknightRecallDeath}
 ~~ }
 STATE: {GiveManaStoneToManaSiphon} ~~ {
 	IF: Always
@@ -303,6 +328,18 @@ STATE: {GiveManaStoneToManaSiphon} ~~ {
 		DO: SetState {DetermineSocietyFinish}
 	IF: SecsInStateGE 10
 		DO: SetState {GiveManaStoneToManaSiphon}
+	IF: Death
+		DO: SetState {GearknightRecallDeath}
+~~ }
+STATE: {GearknightRecallDeath} ~~ {
+	IF: Always
+		DO: EmbedNav nav7 {GearknightRecall.nav}
+	IF: All
+			SecsInStateGE 2
+			NavEmpty
+		DO: SetState {NavigatingToGearknightLoop}
+	IF: SecsInStateGE 15
+		DO: SetState {GearknightRecallDeath}
 ~~ }
 STATE: {DetermineSocietyFinish} ~~ {
 	IF: Expr {getvar[psociety]=='Hand'}

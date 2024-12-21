@@ -100,7 +100,7 @@ STATE: {DayTimeCheck} ~~ {
 	IF: All 
 			Expr {getisday[]==1}
 			CellE 49E60004
-		DO: SetState {GroupUp}
+		DO: CallState {FellowshipRoleCall} {NavigatingToHoshinoTownOne}
 	IF: Expr {getisnight[]==1}
 		DO: SetState {WaitingForDay}
 ~~ }
@@ -182,39 +182,17 @@ STATE: {NavigatingToDesolationBeach} ~~ {
 	IF: All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {GroupUp}
+		DO: CallState {FellowshipRoleCall} {NavigatingToHoshinoTownOne}
 ~~ }
-STATE: {GroupUp} ~~ {
-	IF: ItemCountLE 0 {Egg}
-		DO: SetState {WaitingForLeader}
-	IF: ItemCountGE 1 {Egg}
-		DO: CallState {VerifyGroup} {NavigatingToHoshinoTownOne}
-~~ }
-STATE: {WaitingForLeader} ~~ {
-	IF: ChatMatch {Fellowship present} ~~ this could be a more robust regex
-		DO: SetState {NavigatingToHoshinoTownOne}
-~~ }
-STATE: {VerifyGroup} ~~ {
-~~ this is a subroutine state used by CallState
-	IF: Always
-		DO: DoExpr {setvar[closeChars,listmap[wobjectfindallbyobjectclass[24],`setvar[dt,coordinatedistancewithz[getplayercoordinates[],wobjectgetphysicscoordinates[$1]]];iif[getvar[dt]<5,wobjectgetstringprop[$1,1],0]`]]}
-	IF: All 
-			SecsInStateGE 2
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]==listcount[getfellownames[]]}
-		DO: Chat {/f Fellowship all detected, waiting to ensure all exit portalspace}
-	IF: All 
-			SecsInStateGE 20
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]==listcount[getfellownames[]]}
+STATE: {FellowshipRoleCall} ~~ {
+	IF: Expr {(getgvar[fellowCounter]%getfellowshipcount[])==listindexof[getfellownames[],wobjectgetname[wobjectgetplayer[]]]}
 		DO: DoAll
-				Chat {/f Fellowship present}
-				DoExpr {setgvar[deathFlag,`False`]}
-				Return
-	IF: All 
-			SecsInStateGE 2
-			Expr {listcount[listfilter[getfellownames[],`listcontains[getvar[closeChars],$1]`]]!=listcount[getfellownames[]]} 
-		DO: Chat {/f Awaiting fellowship, pausing 15 seconds}
-	IF: SecsInStateGE 21
-		DO: SetState {VerifyGroup}
+				DoExpr {setgvar[fellowCounter,getgvar[fellowCounter]+1]}
+				SetState {WaitForFellowship}	
+~~ }
+STATE: {WaitForFellowship} ~~ {
+	IF: Expr {getgvar[fellowCounter]%getfellowshipcount[]==0}
+		DO: Return
 ~~ }
 STATE: {NavigatingToHoshinoTownOne} ~~ {
 	IF: Always
@@ -239,19 +217,13 @@ STATE: {RunDetectLoop} ~~ {
 				SetState {EvacHoshinoTownOne}
 	IF: Expr {listcount[wobjectfindalllandscapebynamerx[`Daimyo Nobanuga`]]==1}
 		DO: DoAll
-				Chat {/f Daimyo Nobanuga detected.  Moving to wait location.}
-				SetState {DaimyoDetected}
+				Chat {/f Daimyo Nobanuga detected.}
+				DoExpr {vtsetsetting[EnableCombat,`1`]}
+				SetState {End}
 	IF: Death
 		DO: SetState {DaimyoDeath}
 ~~ }
-STATE: {DaimyoDetected} ~~ {
-	IF: All 
-			NavEmpty
-			SecsInStateGE 3
-		DO: DoAll
-				DoExpr {vtsetsetting[EnableCombat,`1`]}
-				SetState {End}
-~~ }
+
 
 ~~ unused states
 STATE: {OpenDoorToLShapedHouse} ~~ {
@@ -285,19 +257,9 @@ STATE: {EvacHoshinoTownOne} ~~ {
 	IF: All
 			NavEmpty
 			SecsInStateGE 3
-		DO: SetState {GroupUpLandblock} ~~ group up before waiting for landblock to ensure all are out
+		DO: CallState {FellowshipRoleCall} {WaitingForLandblockReset}
 	IF: Death
 		DO: SetState {DaimyoDeath}
-~~ }
-STATE: {GroupUpLandblock} ~~ {
-	IF: ItemCountLE 0 {Egg}
-		DO: SetState {WaitingForLeaderLandblock}
-	IF: ItemCountGE 1 {Egg}
-		DO: CallState {VerifyGroup} {WaitingForLandblockReset}
-~~ }
-STATE: {WaitingForLeaderLandblock} ~~ {
-	IF: ChatMatch {Fellowship present} ~~ this could be a more robust regex
-		DO: SetState {WaitingForLandblockReset}
 ~~ }
 STATE: {WaitingForLandblockReset} ~~ {
 	IF: SecsInStateGE 300 ~~ 5 minute landblock reset
